@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Madplan">
+<meta name="theme-color" content="#f5f2ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141613" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<title>Madplan</title>
+<style>
+:root{
+  --bg:#f5f2ec; --card:#ffffff; --bar:rgba(245,242,236,.88); --text:#1c1e1a; --muted:#6c6f67; --line:#e5e0d6;
+  --accent:#2e6b4b; --accent-soft:#e1ede5; --on-accent:#fff;
+  --meat:#a9432c; --meat-soft:#f6e3dc; --fish:#2a6593; --fish-soft:#dfeaf4;
+  --veg:#2e6b4b; --veg-soft:#e1ede5; --fixed:#86661c; --fixed-soft:#f3ead3;
+  --warn:#a9432c; --shadow:0 1px 2px rgba(30,25,15,.06),0 0 0 1px rgba(30,25,15,.04);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#141613; --card:#1f221e; --bar:rgba(20,22,19,.88); --text:#ecebe6; --muted:#9a9d94; --line:#2e322c;
+    --accent:#7cc29a; --accent-soft:#233a2c; --on-accent:#0f1a13;
+    --meat:#ef9a83; --meat-soft:#3d2620; --fish:#8fbfe6; --fish-soft:#1f3040;
+    --veg:#7cc29a; --veg-soft:#233a2c; --fixed:#e2c06e; --fixed-soft:#3a3220;
+    --warn:#ef9a83; --shadow:0 0 0 1px rgba(255,255,255,.05);
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;-webkit-tap-highlight-color:transparent;overscroll-behavior-y:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.wrap{max-width:640px;margin:0 auto}
+header.top{position:sticky;top:0;z-index:5;background:var(--bar);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);padding:calc(env(safe-area-inset-top) + 12px) 18px 10px}
+header .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+h1{font-size:30px;font-weight:750;margin:0;letter-spacing:-.02em}
+.sub{color:var(--muted);font-size:14px}
+main{padding:4px 16px calc(96px + env(safe-area-inset-bottom))}
+nav.tabs{position:fixed;bottom:0;left:0;right:0;z-index:6;background:var(--bar);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:6px 0 calc(4px + env(safe-area-inset-bottom))}
+nav.tabs .wrap{display:grid;grid-template-columns:repeat(4,1fr)}
+.tab{background:none;border:0;color:var(--muted);font-size:11px;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0 2px}
+.tab svg{width:25px;height:25px}
+.tab.on{color:var(--accent)}
+.card{background:var(--card);border-radius:16px;box-shadow:var(--shadow)}
+.section-title{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:22px 4px 8px}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;border-radius:999px;padding:2px 9px;white-space:nowrap}
+.chip.meat{background:var(--meat-soft);color:var(--meat)}
+.chip.fish{background:var(--fish-soft);color:var(--fish)}
+.chip.veg{background:var(--veg-soft);color:var(--veg)}
+.chip.fixed{background:var(--fixed-soft);color:var(--fixed)}
+.btn{appearance:none;border:0;border-radius:13px;padding:14px 18px;font-weight:650;font-size:16px;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn.primary{background:var(--accent);color:var(--on-accent)}
+.btn.soft{background:var(--accent-soft);color:var(--accent)}
+.btn.danger{background:var(--meat-soft);color:var(--meat)}
+.btn.block{width:100%}
+.btn:disabled{opacity:.45}
+.iconbtn{appearance:none;border:0;background:var(--accent-soft);color:var(--accent);width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.iconbtn svg{width:20px;height:20px}
+.iconbtn.plain{background:transparent}
+.btnrow{display:flex;gap:10px;margin-top:18px}
+.btnrow .btn{flex:1}
+a{color:var(--accent)}
+
+/* Week */
+.weeknav{display:flex;align-items:center;justify-content:space-between;margin:2px 0 10px}
+.weeknav .label{font-weight:650;text-align:center}
+.weeknav .label small{display:block;font-weight:400;color:var(--muted);font-size:13px}
+.summary{display:flex;flex-wrap:wrap;gap:6px;margin:0 2px 12px}
+.days{display:flex;flex-direction:column;gap:8px}
+.day{display:grid;grid-template-columns:52px 1fr auto;align-items:center;gap:10px;padding:12px 10px 12px 14px;min-height:72px;text-align:left;border:0;width:100%}
+.day .dname{font-weight:700;font-size:15px;line-height:1.1}
+.day .dname small{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:3px}
+.day .dish{font-weight:600;font-size:17px;line-height:1.25}
+.day .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:5px}
+.day .shared{font-size:12.5px;color:var(--muted);margin-top:5px;line-height:1.35}
+.day .shared b{color:var(--accent);font-weight:600}
+.day.fixedday{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}
+.day .empty{color:var(--muted);font-weight:500}
+.badge-ok{display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-weight:650;font-size:14px}
+.empty-state{text-align:center;padding:48px 20px 24px;color:var(--muted)}
+.empty-state h2{color:var(--text);font-size:20px;margin:0 0 6px}
+.empty-state .btn{margin-top:18px}
+
+/* Lists */
+.list{overflow:hidden}
+.li{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--line);background:none;border-left:0;border-right:0;border-bottom:0;width:100%;text-align:left}
+.li:first-child{border-top:0}
+.li .grow{flex:1;min-width:0}
+.li .t{font-weight:600}
+.li .s{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li .chev{color:var(--muted);flex:none}
+.search{width:100%;border:0;border-radius:12px;background:var(--card);box-shadow:var(--shadow);padding:11px 14px;font-size:16px;outline:none;margin:4px 0 6px}
+
+/* Shopping */
+.shop .li{padding:11px 14px}
+.check{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;background:none;padding:0}
+.check.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.check svg{width:15px;height:15px}
+.shop .done .t{text-decoration:line-through;color:var(--muted)}
+.shop .done .s{opacity:.6}
+.reuse{font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:2px 8px;white-space:nowrap;flex:none}
+.legend{font-size:13px;color:var(--muted);margin:0 4px 4px}
+details.pantry{margin-top:22px}
+details.pantry summary{list-style:none;cursor:pointer;color:var(--muted);font-size:14px;padding:6px 4px}
+details.pantry summary::-webkit-details-marker{display:none}
+
+/* Forms */
+label.f{display:block;font-size:13px;font-weight:600;color:var(--muted);margin:16px 2px 6px}
+input.in,select.in,textarea.in{width:100%;border:0;border-radius:12px;background:var(--card);box-shadow:var(--shadow);padding:12px 14px;font-size:16px;outline:none}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--card);box-shadow:var(--shadow);border-radius:12px;padding:3px;gap:3px}
+.seg button{border:0;background:none;border-radius:9px;padding:9px 4px;font-weight:600;font-size:14px;color:var(--muted)}
+.seg button.on{background:var(--accent);color:var(--on-accent)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;background:var(--card);box-shadow:var(--shadow);border-radius:12px;padding:10px}
+.tag{display:inline-flex;align-items:center;gap:2px;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:4px 4px 4px 11px;font-size:14px;font-weight:550}
+.tag.pantry{background:transparent;box-shadow:inset 0 0 0 1px var(--line);color:var(--muted)}
+.tag button{border:0;background:none;color:inherit;width:24px;height:24px;border-radius:50%;padding:0;display:flex;align-items:center;justify-content:center;font-size:16px;line-height:1}
+.tags input{flex:1;min-width:120px;border:0;background:none;outline:none;padding:5px 4px;font-size:16px}
+.suggest{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.suggest button{border:0;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:6px 12px;font-size:14px}
+.hint{font-size:13px;color:var(--muted);margin:6px 2px 0}
+.setrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-top:1px solid var(--line)}
+.setrow:first-child{border-top:0}
+.setrow select{border:0;background:var(--accent-soft);color:var(--accent);font-weight:600;border-radius:10px;padding:7px 10px;font-size:15px;max-width:60%}
+.stepper{display:flex;align-items:center;gap:10px}
+.stepper button{width:34px;height:34px;border-radius:50%;border:0;background:var(--accent-soft);color:var(--accent);font-size:20px;font-weight:600;line-height:1}
+.stepper span{min-width:18px;text-align:center;font-weight:650;font-variant-numeric:tabular-nums}
+.switch{position:relative;width:51px;height:31px;border-radius:999px;border:0;background:var(--line);flex:none;padding:0;transition:background .2s}
+.switch::after{content:"";position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s}
+.switch.on{background:var(--accent)}
+.switch.on::after{transform:translateX(20px)}
+
+/* Sheet */
+.backdrop{position:fixed;inset:0;z-index:20;background:rgba(10,10,8,.38);display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .2s}
+.backdrop.show{opacity:1}
+.sheet{background:var(--bg);width:100%;max-width:640px;max-height:90vh;max-height:90dvh;overflow:auto;-webkit-overflow-scrolling:touch;border-radius:20px 20px 0 0;padding:8px 16px calc(22px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.backdrop.show .sheet{transform:none}
+.grab{width:38px;height:5px;border-radius:3px;background:var(--line);margin:2px auto 10px}
+.sheet h2{font-size:21px;margin:4px 2px 4px;letter-spacing:-.01em}
+.sheet .sheethead{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.warnline{font-size:12.5px;color:var(--warn);margin-top:2px}
+.okline{font-size:12.5px;color:var(--accent);margin-top:2px}
+.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--text);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;font-weight:550;opacity:0;transition:all .2s;z-index:30;pointer-events:none;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap row"><div><h1 id="title">Madplan</h1></div><div id="hact"></div></div></header>
+<main><div class="wrap" id="view"></div></main>
+<nav class="tabs"><div class="wrap">
+  <button class="tab" data-tab="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Madplan</button>
+  <button class="tab" data-tab="shop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h2l2 11h10l2-8H7"/><circle cx="9.5" cy="19.5" r="1.3"/><circle cx="17" cy="19.5" r="1.3"/></svg>Indkøb</button>
+  <button class="tab" data-tab="dishes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="7.5"/><circle cx="12" cy="13" r="4"/><path d="M12 2.5v3"/></svg>Retter</button>
+  <button class="tab" data-tab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>Indstillinger</button>
+</div></nav>
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+/* ---------- Konstanter ---------- */
+const DAYS = ['Lørdag','Søndag','Mandag','Tirsdag','Onsdag','Torsdag','Fredag'];
+const DAYS_SHORT = ['Lør','Søn','Man','Tir','Ons','Tor','Fre'];
+const MONTHS = ['jan.','feb.','mar.','apr.','maj','jun.','jul.','aug.','sep.','okt.','nov.','dec.'];
+const CATS = { fisk:{l:'Fisk',c:'fish'}, kod:{l:'Kød',c:'meat'}, veg:{l:'Vegetar',c:'veg'}, fast:{l:'Fast ret',c:'fixed'} };
+const DEPTS = ['Frugt & grønt','Kød & fisk','Mejeri','Brød','Kolonial','Frost','Andet'];
+const STORE_KEY = 'madplan.v1';
+
+const ICON = {
+  shuffle:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h4v4M20 4l-6.5 6.5M4 20l6-6M16 20h4v-4M20 20 4 4"/></svg>',
+  left:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></svg>',
+  right:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  share:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7.5 7.5 12 3l4.5 4.5M5 12v6.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V12"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
+  link:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>',
+  chev:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></svg>',
+};
+
+/* ---------- Startdata ---------- */
+const SEED_DISHES = [
+  ['fiskedeller','Fiskedeller','fisk','torskefilet, dild, mælk, æg, hvedemel, citron','https://www.arla.dk/opskrifter/fiskefrikadeller/'],
+  ['laks-buddha','Laks i buddha','fisk','laks, citron, avocado, babyspinat, rødløg, broccolini, ris, sojasauce, brun farin, sweet chilisauce, stødt ingefær, hvidløg, majsstivelse','https://madensverden.dk/laksebowl/'],
+  ['rodspaetter','Rødspætter','fisk','rødspætter, rugmel, mælk, majsstivelse, persille, sukker, kartofler, ærter, citron','https://www.arla.dk/opskrifter/stegte-rodspatter/'],
+  ['pita','Pita','kod','kyllingebryst, citron, røget paprika, sød paprika, hvidløg, cremefraiche, mayonnaise, parmesan, pesto, pitabrød, salat, rucola, agurk, tomater','https://www.valdemarsro.dk/pita-med-kylling/'],
+  ['wok','Wok','kod','æg, kyllingebryst, gul karrypasta, løg, ingefær, hvidløg, broccoli, peberfrugt, gulerødder, kokosmælk, nudler, babyspinat, forårsløg, cashewnødder, koriander','https://www.valdemarsro.dk/wok-med-kylling/'],
+  ['rode-deller','Røde deller','kod','hakket grisekød, løg, mælk, hvedemel, hakkede tomater, sukker, spaghetti, persille, pastaost','https://www.arla.dk/opskrifter/kodboller-i-tomatsauce/'],
+  ['pastaret','Pastaret','kod','kyllingebryst, chorizo, forårsløg, broccoli, bouillon, fløde, citron, persille, pasta','https://madensverden.dk/pastaret-med-chorizo-kylling-og-broccoli/'],
+  ['polser','Pølser','kod','kartofler, wienerpølser, løg, hvidløg, tomatpuré, paprika, ketchup, æblecidereddike, fløde, purløg','https://www.arla.dk/opskrifter/svensk-polseret/'],
+  ['chicken-masala','Chicken Masala','kod','kyllingebryst, græsk yoghurt, hvidløg, ingefær, garam masala, gurkemeje, chiliflager, nelliker, lime, løg, mandler, tomatpuré, fløde, ris, koriander','https://www.valdemarsro.dk/tikka-chicken-masala/'],
+  ['kodsovs','Kødsovs','kod','hakket oksekød, løg, hvidløg, gulerødder, bladselleri, hakkede tomater, tomatpuré, bouillon, oregano, basilikum, citron, pasta','https://madensverden.dk/pasta-med-koedsovs/'],
+  ['lasagne','Lasagne','kod','løg, hvidløg, bladselleri, gulerødder, hakket oksekød, oregano, bouillon, tomatpassata, soltørrede tomater, hvedemel, mælk, muskatnød, citron, sukker, lasagneplader, mozzarella','https://madensverden.dk/lasagne/'],
+  ['tortilla','Tortilla','kod','hakket oksekød, majs, spidskommen, sød paprika, røget paprika, chiliflager, stødt koriander, nelliker, tomatpuré, mynte, tortillas, salat, cheddar, tomater, avocado, rødløg, agurk','https://www.valdemarsro.dk/nem-tortillas-med-krydret-oksekoed/'],
+  ['tarteletter','Tarteletter','kod','kyllingebryst, bouillon, gulerødder, løg, laurbærblade, hvedemel, mælk, aspargessnitter, tarteletskaller, persille','https://www.valdemarsro.dk/tarteletter-hoens-asparges/'],
+  ['taerte','Tærte','veg','hvedemel, kartofler, spinat (frost), forårsløg, yoghurt, æg, timian, rosmarin, feta','https://madensverden.dk/vegetartaerte-med-feta-og-spinat/'],
+  ['kikaertegryde','Kikærtegryde','veg','løg, hvidløg, spidskommen, stødt koriander, gurkemeje, røde linser, søde kartofler, hakkede tomater, bouillon, kokosmælk, peberfrugt, kikærter, babyspinat, ris, cremefraiche, koriander','https://www.arla.dk/opskrifter/krydret-kikartegryde/'],
+  ['daal','Daal','veg','hvidløg, ingefær, karry, spidskommen, stødt koriander, kardemomme, chiliflager, bouillon, røde linser, hakkede tomater, mynte, græsk yoghurt, agurk, koriander','https://www.valdemarsro.dk/dhal/'],
+  ['gronsagslasagne','Grønsagslasagne','veg','løg, hvidløg, champignon, timian, gulerødder, bladselleri, squash, aubergine, tomatpuré, hakkede tomater, bouillon, spinat (frost), basilikum, fløde, muskatnød, hvedemel, mælk, mozzarella, lasagneplader','https://www.valdemarsro.dk/vegetar-lasagne/'],
+  ['risotto','Risotto','veg','løg, hvidløg, risottoris, champignon, bouillon, parmesan, persille','https://www.valdemarsro.dk/risotto-med-svampe/'],
+  ['suppe','Suppe','fast','porrer, kartofler, bouillon, flødeost, fløde, citron','https://madensverden.dk/porresuppe-med-floedeost/'],
+  ['rugbrod','Rugbrød','fast','rugbrød, pålæg',''],
+  ['pizza','Pizza','fast','gær, pizzamel, sukker, tomatsauce, mozzarella, pepperoni, rødløg, oregano','https://www.arla.dk/opskrifter/pepperoni-pizza/'],
+];
+const SEED_PANTRY = ['hvedemel','sukker','brun farin','majsstivelse','bouillon','hvidløg','tomatpuré','sojasauce','oregano','basilikum','timian','rosmarin','laurbærblade','muskatnød','spidskommen','stødt koriander','stødt ingefær','gurkemeje','chiliflager','nelliker','garam masala','karry','kardemomme','røget paprika','sød paprika','paprika','ketchup','mayonnaise','æblecidereddike','sweet chilisauce','rugmel'];
+const SEED_DEPT = {
+  'Frugt & grønt':'citron, lime, dild, avocado, babyspinat, rødløg, broccolini, ingefær, persille, kartofler, salat, rucola, agurk, tomater, løg, broccoli, peberfrugt, gulerødder, forårsløg, koriander, purløg, bladselleri, mynte, søde kartofler, champignon, squash, aubergine, porrer',
+  'Kød & fisk':'torskefilet, laks, rødspætter, kyllingebryst, hakket grisekød, chorizo, wienerpølser, hakket oksekød, pepperoni, pålæg',
+  'Mejeri':'mælk, æg, cremefraiche, parmesan, fløde, græsk yoghurt, yoghurt, mozzarella, cheddar, feta, flødeost, pastaost, gær',
+  'Brød':'pitabrød, tortillas, rugbrød, tarteletskaller',
+  'Kolonial':'ris, pesto, gul karrypasta, kokosmælk, nudler, cashewnødder, hakkede tomater, spaghetti, pasta, mandler, tomatpassata, soltørrede tomater, lasagneplader, majs, aspargessnitter, røde linser, kikærter, risottoris, tomatsauce, pizzamel',
+  'Frost':'ærter, spinat (frost)',
+};
+const split = s => s.split(',').map(x=>x.trim()).filter(Boolean);
+
+function seedState(){
+  const dept = {};
+  for (const [d, list] of Object.entries(SEED_DEPT)) for (const i of split(list)) dept[i] = d;
+  return {
+    v:1,
+    dishes: SEED_DISHES.map(([id,name,cat,ings,url]) => ({id,name,cat,ings:split(ings),url})),
+    rules: { fixed:[null,null,'suppe','rugbrod',null,null,'pizza'], maxMeat:2, fish:1, noMeatInRow:true, avoidWeeks:2 },
+    pantry: SEED_PANTRY.slice(),
+    dept,
+    plans: {},
+  };
+}
+
+/* ---------- Lager ---------- */
+let S;
+function load(){
+  try { const raw = localStorage.getItem(STORE_KEY); S = raw ? JSON.parse(raw) : seedState(); }
+  catch(e){ S = seedState(); }
+  if (!S || !Array.isArray(S.dishes)) S = seedState();
+}
+function save(){
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); }
+  catch(e){ toast('Kunne ikke gemme - tag en backup'); }
+}
+load();
+if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(()=>{});
+
+/* ---------- Hjælpere ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = s => String(s).trim().toLowerCase().replace(/\s+/g,' ');
+const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
+const uid = () => Math.random().toString(36).slice(2,9);
+const dishById = id => S.dishes.find(d => d.id === id);
+const pantrySet = () => new Set(S.pantry);
+function shuffle(a){ for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+function ymd(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function parseYmd(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
+function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+function saturdayOf(d){ const x=new Date(d.getFullYear(),d.getMonth(),d.getDate()); return addDays(x, -((x.getDay()+1)%7)); }
+const fmtDate = d => d.getDate()+'. '+MONTHS[d.getMonth()];
+
+let toastT;
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2200); }
+
+/* ---------- UI-tilstand ---------- */
+const UI = { tab:'plan', week: ymd(saturdayOf(new Date())), dishFilter:'' };
+
+function getPlan(key, create){
+  if (!S.plans[key] && create) S.plans[key] = { days: S.rules.fixed.slice(), approved:false, checked:{} };
+  return S.plans[key];
+}
+
+/* ---------- Planlægning ---------- */
+function recentSet(key){
+  const set = new Set(); const sat = parseYmd(key);
+  for (let w=1; w<=S.rules.avoidWeeks; w++){
+    const p = S.plans[ymd(addDays(sat,-7*w))];
+    if (p) p.days.forEach(id => id && set.add(id));
+  }
+  return set;
+}
+function ingsFor(id, pantry){
+  const d = dishById(id); if (!d) return [];
+  return [...new Set(d.ings.map(norm))].filter(i => !pantry.has(i));
+}
+function overlap(ids, pantry){
+  const cnt = new Map();
+  for (const id of ids) if (id) for (const i of ingsFor(id,pantry)) cnt.set(i,(cnt.get(i)||0)+1);
+  let s=0; for (const v of cnt.values()) if (v>1) s += v-1; return s;
+}
+const isFree = d => S.rules.fixed[d] == null;
+const catOf = id => (dishById(id)||{}).cat;
+
+/* Tjek en plan mod reglerne. Kun frie dage tæller. */
+function check(ids, key){
+  const r = S.rules, recent = recentSet(key);
+  let fish=0, meat=0, inRow=false, rec=[], dup=false; const seen = new Set();
+  for (let d=0; d<7; d++){
+    const id = ids[d]; if (!id) continue;
+    if (seen.has(id)) dup = true; seen.add(id);
+    if (!isFree(d)) continue;
+    const c = catOf(id);
+    if (c==='fisk') fish++;
+    if (c==='kod') meat++;
+    if (recent.has(id)) rec.push(id);
+    if (r.noMeatInRow && d<6 && isFree(d+1) && c==='kod' && catOf(ids[d+1])==='kod') inRow = true;
+  }
+  return { fish, meat, inRow, recent:rec, dup };
+}
+
+/* Fuld gennemsøgning af frie dage. Niveau 0 = alle regler. Højere niveau lemper reglerne. */
+function search(key, baseIds, freeDays, level){
+  const r = S.rules, pantry = pantrySet(), recent = recentSet(key);
+  const pool = S.dishes.filter(d => d.cat!=='fast').map(d => d.id);
+  const out = []; const ids = baseIds.slice(); const used = new Set(ids.filter(Boolean));
+  const fresh = freshness(key);
+  const allowRecent = level>=1, allowRow = level>=2, allowCounts = level>=3;
+  let leaves = 0;
+  (function dfs(k, fish, meat){
+    if (leaves > 400000) return;
+    if (k === freeDays.length){
+      leaves++;
+      if (!allowCounts && fish !== r.fish) return;
+      let score = overlap(ids, pantry);
+      for (let i=0;i<7;i++) if (isFree(i) && ids[i]) score += fresh[ids[i]] ?? FRESH_MAX;
+      if (allowRecent) score -= 3*ids.filter((id,d)=>isFree(d)&&recent.has(id)).length;
+      out.push({ ids: ids.slice(), score });
+      return;
+    }
+    const d = freeDays[k];
+    for (const id of pool){
+      if (used.has(id)) continue;
+      if (!allowRecent && recent.has(id)) continue;
+      const c = catOf(id);
+      const f = fish + (c==='fisk'?1:0), m = meat + (c==='kod'?1:0);
+      if (!allowCounts && (f > r.fish || m > r.maxMeat)) continue;
+      if (!allowRow && r.noMeatInRow && c==='kod'){
+        if (d>0 && isFree(d-1) && catOf(ids[d-1])==='kod') continue;
+        if (d<6 && isFree(d+1) && catOf(ids[d+1])==='kod' && !freeDays.slice(k).includes(d+1)) continue;
+      }
+      ids[d] = id; used.add(id);
+      dfs(k+1, f, m);
+      used.delete(id); ids[d] = null;
+    }
+  })(0, ...(() => { let f=0,m=0; baseIds.forEach((id,d)=>{ if(id&&isFree(d)){ const c=catOf(id); if(c==='fisk')f++; if(c==='kod')m++; } }); return [f,m]; })());
+  return out;
+}
+/* Bonus til retter der ikke er spist længe, så alle retter kommer på skift */
+const FRESH_MAX = 3.2;
+function freshness(key){
+  const out = {}; const sat = parseYmd(key);
+  for (let w=1; w<=8; w++){
+    const p = S.plans[ymd(addDays(sat,-7*w))]; if (!p) continue;
+    p.days.forEach(id => { if (id && !(id in out)) out[id] = 0.4*w; });
+  }
+  return out;
+}
+function pickTop(results){
+  results.sort((a,b)=>b.score-a.score);
+  const best = results[0].score;
+  const top = results.filter(x => x.score >= best-1).slice(0,60);
+  return top[Math.floor(Math.random()*top.length)];
+}
+const RELAX_MSG = ['', 'Retter fra de seneste uger var nødvendige', 'Kød to dage i træk var nødvendigt', 'Fisk/kød-reglen kunne ikke overholdes'];
+
+function generate(key){
+  const base = S.rules.fixed.slice();
+  const free = [0,1,2,3,4,5,6].filter(isFree);
+  for (let lvl=0; lvl<=3; lvl++){
+    const res = search(key, base, free, lvl);
+    if (res.length){
+      const pick = pickTop(res);
+      const p = getPlan(key, true);
+      p.days = pick.ids; p.approved = false; p.checked = {};
+      save();
+      if (lvl) toast(RELAX_MSG[lvl]);
+      return true;
+    }
+  }
+  toast('For få retter til at lave en plan');
+  return false;
+}
+
+/* Byt én dag: bedste gyldige alternativ med lidt tilfældighed */
+function swapDay(key, d){
+  const p = getPlan(key); const cur = p.days[d];
+  const cands = rankFor(key, d).filter(c => c.id !== cur && c.dish.cat!=='fast');
+  if (!cands.length){ toast('Ingen anden ret passer'); return; }
+  const okC = cands.filter(c => !c.problems.length);
+  const list = okC.length ? okC : cands;
+  const best = list[0].score;
+  const top = list.filter(c => c.score >= best-1).slice(0,4);
+  const pick = top[Math.floor(Math.random()*top.length)];
+  p.days[d] = pick.id; save();
+  if (!okC.length) toast('Ingen ret overholder alle regler');
+  render();
+}
+
+/* Rangér alle retter til en given dag */
+function rankFor(key, d){
+  const p = getPlan(key); const pantry = pantrySet();
+  return S.dishes.map(dish => {
+    const ids = p.days.slice(); ids[d] = dish.id;
+    const chk = check(ids, key); const problems = [];
+    const other = p.days.some((x,i)=> i!==d && x===dish.id);
+    if (other) problems.push('allerede i ugen');
+    if (isFree(d)){
+      if (chk.fish !== S.rules.fish) problems.push(chk.fish > S.rules.fish ? 'for mange fiskedage' : 'mangler fiskedag');
+      if (chk.meat > S.rules.maxMeat) problems.push('for mange kød-dage');
+      if (chk.inRow) problems.push('kød to dage i træk');
+      if (chk.recent.includes(dish.id)) problems.push('spist for nylig');
+    }
+    // delte ingredienser med resten af ugen
+    const others = new Set(); p.days.forEach((x,i)=>{ if(i!==d && x) ingsFor(x,pantry).forEach(g=>others.add(g)); });
+    const shared = ingsFor(dish.id,pantry).filter(g=>others.has(g));
+    return { id:dish.id, dish, problems, shared, score: overlap(ids,pantry) - (problems.length?100:0) };
+  }).sort((a,b)=>b.score-a.score || a.dish.name.localeCompare(b.dish.name,'da'));
+}
+
+/* ---------- Render ---------- */
+function setHeader(title, actionHtml){ $('#title').textContent = title; $('#hact').innerHTML = actionHtml || ''; }
+function render(){
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.tab===UI.tab));
+  ({plan:renderPlan, shop:renderShop, dishes:renderDishes, settings:renderSettings})[UI.tab]();
+}
+const chip = cat => cat && CATS[cat] ? `<span class="chip ${CATS[cat].c}">${CATS[cat].l}</span>` : '';
+
+function weekNav(){
+  const sat = parseYmd(UI.week), fri = addDays(sat,6);
+  const thisSat = ymd(saturdayOf(new Date()));
+  const rel = UI.week===thisSat ? 'Denne uge' : (UI.week===ymd(addDays(saturdayOf(new Date()),7)) ? 'Næste uge' : (UI.week < thisSat ? 'Tidligere uge' : 'Senere uge'));
+  return `<div class="weeknav"><button class="iconbtn plain" data-act="week" data-n="-7" aria-label="Forrige uge">${ICON.left}</button>
+    <div class="label">${rel}<small>lør ${fmtDate(sat)} - fre ${fmtDate(fri)}</small></div>
+    <button class="iconbtn plain" data-act="week" data-n="7" aria-label="Næste uge">${ICON.right}</button></div>`;
+}
+
+function renderPlan(){
+  setHeader('Madplan');
+  const p = getPlan(UI.week);
+  let h = weekNav();
+  if (!p || !p.days.some((id,d)=>id && isFree(d))){
+    h += `<div class="empty-state"><h2>Ingen madplan endnu</h2><div>Faste dage er sat. Appen foreslår resten ud fra jeres regler og genbrug af råvarer.</div>
+      <button class="btn primary" data-act="generate">Lav madplan</button></div>`;
+    $('#view').innerHTML = h; return;
+  }
+  const pantry = pantrySet(); const chk = check(p.days, UI.week);
+  const veg = p.days.filter((id,d)=>id&&isFree(d)&&catOf(id)==='veg').length;
+  h += `<div class="summary">${chip('fisk').replace('Fisk',chk.fish+' fisk')}${chip('kod').replace('Kød',chk.meat+' kød')}${chip('veg').replace('Vegetar',veg+' vegetar')}<span class="chip fixed">${overlap(p.days,pantry)} delte råvarer</span></div>`;
+  h += '<div class="days">';
+  for (let d=0; d<7; d++){
+    const id = p.days[d], dish = dishById(id), sat = parseYmd(UI.week);
+    const others = new Set(); p.days.forEach((x,i)=>{ if(i!==d && x) ingsFor(x,pantry).forEach(g=>others.add(g)); });
+    const shared = dish ? ingsFor(id,pantry).filter(g=>others.has(g)) : [];
+    const fixed = !isFree(d);
+    h += `<div class="card day ${fixed?'fixedday':''}" data-act="pick" data-d="${d}" role="button">
+      <div class="dname">${DAYS_SHORT[d]}<small>${fmtDate(addDays(sat,d))}</small></div>
+      <div>${dish ? `<div class="dish">${esc(dish.name)}</div><div class="meta">${chip(dish.cat)}${dish.url?`<a href="${esc(dish.url)}" target="_blank" rel="noopener" class="chip" style="background:var(--accent-soft);color:var(--accent)" data-stop="1">Opskrift</a>`:''}</div>
+        ${shared.length?`<div class="shared">Deler <b>${esc(shared.join(', '))}</b></div>`:''}` : '<div class="empty">Vælg ret</div>'}</div>
+      <div>${(!fixed && !p.approved) ? `<button class="iconbtn" data-act="swap" data-d="${d}" aria-label="Byt ret">${ICON.shuffle}</button>` : ''}</div>
+    </div>`;
+  }
+  h += '</div>';
+  if (p.approved){
+    h += `<div class="btnrow"><button class="btn soft" data-act="unapprove">Ret plan</button><button class="btn primary" data-act="tab" data-tab="shop">Indkøbsliste</button></div>`;
+  } else {
+    h += `<div class="btnrow"><button class="btn soft" data-act="regen">Ny madplan</button><button class="btn primary" data-act="approve">Godkend</button></div>
+      <p class="hint" style="text-align:center">Tryk på en dag for at vælge selv, eller ${'⇄'} for at bytte.</p>`;
+  }
+  $('#view').innerHTML = h;
+}
+
+function shoppingItems(p){
+  const pantry = pantrySet(); const map = new Map();
+  p.days.forEach((id,d) => {
+    const dish = dishById(id); if (!dish) return;
+    for (const raw of new Set(dish.ings.map(norm))){
+      if (!map.has(raw)) map.set(raw, { name:raw, dishes:[], pantry:pantry.has(raw) });
+      map.get(raw).dishes.push(DAYS_SHORT[d]+' '+dish.name);
+    }
+  });
+  return [...map.values()];
+}
+function renderShop(){
+  const p = getPlan(UI.week);
+  setHeader('Indkøb', p && p.approved ? `<button class="iconbtn" data-act="share" aria-label="Del liste">${ICON.share}</button>` : '');
+  let h = weekNav();
+  if (!p || !p.approved){
+    h += `<div class="empty-state"><h2>Ingen godkendt madplan</h2><div>Indkøbslisten dannes, når ugens madplan er godkendt.</div>
+      <button class="btn primary" data-act="tab" data-tab="plan">Gå til madplan</button></div>`;
+    $('#view').innerHTML = h; return;
+  }
+  const items = shoppingItems(p);
+  const buy = items.filter(i=>!i.pantry), have = items.filter(i=>i.pantry);
+  const left = buy.filter(i=>!p.checked[i.name]).length;
+  h += `<p class="legend">${left} af ${buy.length} varer mangler · tryk på en vare for at flytte afdeling</p>`;
+  for (const dept of DEPTS){
+    const list = buy.filter(i => (S.dept[i.name]||'Andet')===dept)
+      .sort((a,b)=> (!!p.checked[a.name]-!!p.checked[b.name]) || a.name.localeCompare(b.name,'da'));
+    if (!list.length) continue;
+    h += `<div class="section-title">${dept}</div><div class="card list shop">`;
+    for (const it of list){
+      const on = !!p.checked[it.name];
+      h += `<div class="li ${on?'done':''}">
+        <button class="check ${on?'on':''}" data-act="tick" data-i="${esc(it.name)}" aria-label="Afkryds">${on?ICON.check:''}</button>
+        <div class="grow" data-act="item" data-i="${esc(it.name)}" role="button"><div class="t">${esc(cap(it.name))}</div><div class="s">${esc(it.dishes.join(', '))}</div></div>
+        ${it.dishes.length>1?`<span class="reuse">${it.dishes.length} retter</span>`:''}
+      </div>`;
+    }
+    h += '</div>';
+  }
+  if (have.length){
+    h += `<details class="pantry"><summary>Har altid · ${have.length} varer skjult ▾</summary><div class="card list shop">`;
+    for (const it of have.sort((a,b)=>a.name.localeCompare(b.name,'da'))){
+      h += `<div class="li"><div class="grow"><div class="t">${esc(cap(it.name))}</div><div class="s">${esc(it.dishes.join(', '))}</div></div>
+        <button class="btn soft" style="padding:7px 12px;font-size:14px" data-act="unpantry" data-i="${esc(it.name)}">Skal købes</button></div>`;
+    }
+    h += '</div></details>';
+  }
+  $('#view').innerHTML = h;
+}
+
+function renderDishes(){
+  setHeader('Retter', `<button class="iconbtn" data-act="newdish" aria-label="Ny ret">${ICON.plus}</button>`);
+  const q = norm(UI.dishFilter);
+  let h = `<input class="search" type="search" placeholder="Søg ret eller ingrediens" value="${esc(UI.dishFilter)}" data-input="dishFilter">`;
+  for (const cat of ['fisk','kod','veg','fast']){
+    const list = S.dishes.filter(d => d.cat===cat && (!q || norm(d.name).includes(q) || d.ings.some(i=>norm(i).includes(q))))
+      .sort((a,b)=>a.name.localeCompare(b.name,'da'));
+    if (!list.length) continue;
+    h += `<div class="section-title">${CATS[cat].l} · ${list.length}</div><div class="card list">`;
+    for (const d of list){
+      const fixedDays = S.rules.fixed.map((x,i)=>x===d.id?DAYS[i].toLowerCase():null).filter(Boolean);
+      h += `<button class="li" data-act="editdish" data-id="${d.id}"><div class="grow"><div class="t">${esc(d.name)}</div>
+        <div class="s">${fixedDays.length?'Fast '+fixedDays.join(', ')+' · ':''}${d.ings.length} ingredienser${d.url?' · opskrift':''}</div></div><span class="chev">${ICON.chev}</span></button>`;
+    }
+    h += '</div>';
+  }
+  $('#view').innerHTML = h;
+  const s = $('.search'); if (UI.focusSearch){ s.focus(); s.setSelectionRange(s.value.length,s.value.length); UI.focusSearch=false; }
+}
+
+function renderSettings(){
+  setHeader('Indstillinger');
+  const r = S.rules; const fixedDishes = S.dishes.filter(d=>d.cat==='fast');
+  let h = `<div class="section-title">Ugen (lørdag til fredag)</div><div class="card">`;
+  for (let d=0; d<7; d++){
+    h += `<div class="setrow"><span>${DAYS[d]}</span><select data-change="fixed" data-d="${d}">
+      <option value="">Fri dag</option>${fixedDishes.map(f=>`<option value="${f.id}" ${r.fixed[d]===f.id?'selected':''}>${esc(f.name)}</option>`).join('')}</select></div>`;
+  }
+  h += `</div><p class="hint">Faste retter oprettes under Retter med kategorien "Fast ret".</p>`;
+  h += `<div class="section-title">Regler for frie dage</div><div class="card">
+    <div class="setrow"><span>Fiskedage</span><div class="stepper"><button data-act="step" data-k="fish" data-n="-1">−</button><span>${r.fish}</span><button data-act="step" data-k="fish" data-n="1">+</button></div></div>
+    <div class="setrow"><span>Maks. kød-dage</span><div class="stepper"><button data-act="step" data-k="maxMeat" data-n="-1">−</button><span>${r.maxMeat}</span><button data-act="step" data-k="maxMeat" data-n="1">+</button></div></div>
+    <div class="setrow"><span>Aldrig kød to dage i træk</span><button class="switch ${r.noMeatInRow?'on':''}" data-act="toggleRow" aria-label="Aldrig kød to dage i træk"></button></div>
+    <div class="setrow"><span>Undgå retter fra seneste uger</span><div class="stepper"><button data-act="step" data-k="avoidWeeks" data-n="-1">−</button><span>${r.avoidWeeks}</span><button data-act="step" data-k="avoidWeeks" data-n="1">+</button></div></div>
+  </div>`;
+  h += `<div class="section-title">Har altid · ${S.pantry.length}</div>
+    <div class="tags" id="pantryTags">${S.pantry.slice().sort((a,b)=>a.localeCompare(b,'da')).map(p=>`<span class="tag pantry">${esc(p)}<button data-act="rmPantry" data-i="${esc(p)}" aria-label="Fjern">×</button></span>`).join('')}
+    <input placeholder="Tilføj vare…" data-enter="addPantry" enterkeyhint="done"></div>
+    <p class="hint">Kommer ikke på indkøbslisten og tæller ikke som genbrug.</p>`;
+  h += `<div class="section-title">Backup</div><div class="card">
+    <button class="li" data-act="export"><div class="grow"><div class="t">Eksportér backup</div><div class="s">Gem retter, regler og planer som fil</div></div><span class="chev">${ICON.chev}</span></button>
+    <label class="li" style="cursor:pointer"><div class="grow"><div class="t">Importér backup</div><div class="s">Erstatter alle data på telefonen</div></div><span class="chev">${ICON.chev}</span><input type="file" accept="application/json,.json" data-change="import" hidden></label>
+  </div>
+  <div class="btnrow"><button class="btn danger block" data-act="reset">Nulstil til startdata</button></div>
+  <p class="hint" style="text-align:center;margin-top:16px">Madplan · data gemmes kun på denne enhed</p>`;
+  $('#view').innerHTML = h;
+}
+
+/* ---------- Sheets ---------- */
+let sheetEl = null;
+function openSheet(html){
+  closeSheet(true);
+  sheetEl = document.createElement('div'); sheetEl.className='backdrop';
+  sheetEl.innerHTML = `<div class="sheet" role="dialog"><div class="grab"></div>${html}</div>`;
+  sheetEl.addEventListener('click', e => { if (e.target===sheetEl) closeSheet(); });
+  document.body.appendChild(sheetEl); document.body.style.overflow='hidden';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>sheetEl && sheetEl.classList.add('show')));
+  return sheetEl.querySelector('.sheet');
+}
+function closeSheet(now){
+  if (!sheetEl) return; const el = sheetEl; sheetEl = null; document.body.style.overflow='';
+  if (now) { el.remove(); return; }
+  el.classList.remove('show'); setTimeout(()=>el.remove(), 250);
+}
+
+function openPicker(d){
+  const p = getPlan(UI.week, true);
+  const sh = openSheet(`<div class="sheethead"><h2>${DAYS[d]}</h2>${p.days[d]?`<button class="btn soft" style="padding:8px 12px;font-size:14px" data-act="cleardayx" data-d="${d}">Ryd dag</button>`:''}</div>
+    <p class="hint" style="margin-bottom:8px">Sorteret efter hvor godt retten passer til regler og genbrug.</p>
+    <input class="search" type="search" placeholder="Søg ret" data-pick-search>
+    <div class="card list" id="pickList"></div>`);
+  const draw = q => {
+    q = norm(q||'');
+    const rank = rankFor(UI.week, d).filter(c => !q || norm(c.dish.name).includes(q));
+    sh.querySelector('#pickList').innerHTML = rank.map(c => `<button class="li" data-act="choose" data-d="${d}" data-id="${c.id}">
+      <div class="grow"><div class="t">${esc(c.dish.name)} ${c.id===p.days[d]?'<span class="muted small">· valgt</span>':''}</div>
+      ${c.problems.length && isFree(d) ? `<div class="warnline">${esc(c.problems.join(' · '))}</div>` : (c.shared.length?`<div class="okline">Deler ${esc(c.shared.slice(0,5).join(', '))}${c.shared.length>5?' …':''}</div>`:'')}
+      </div>${chip(c.dish.cat)}</button>`).join('');
+  };
+  draw('');
+  sh.querySelector('[data-pick-search]').addEventListener('input', e => draw(e.target.value));
+}
+
+function openDishEditor(id){
+  const existing = id ? dishById(id) : null;
+  const dish = existing ? JSON.parse(JSON.stringify(existing)) : { id:'', name:'', cat:'veg', ings:[], url:'' };
+  const sh = openSheet(`<div class="sheethead"><h2>${existing?'Redigér ret':'Ny ret'}</h2></div>
+    <label class="f">Navn</label><input class="in" id="dName" value="${esc(dish.name)}" placeholder="Fx Fiskefrikadeller" autocomplete="off">
+    <label class="f">Kategori</label><div class="seg" id="dCat">${Object.entries(CATS).map(([k,v])=>`<button type="button" data-cat="${k}">${v.l}</button>`).join('')}</div>
+    <label class="f">Ingredienser</label><div class="tags" id="dTags"></div>
+    <div class="suggest" id="dSug"></div>
+    <p class="hint">Skriv og tryk retur. Grå = "har altid" og kommer ikke på listen.</p>
+    <label class="f">Link til opskrift (valgfri)</label><input class="in" id="dUrl" type="url" inputmode="url" value="${esc(dish.url)}" placeholder="https://">
+    <div class="btnrow">${existing?'<button class="btn danger" id="dDel">Slet</button>':''}<button class="btn primary" id="dSave">Gem</button></div>`);
+  const known = () => [...new Set([...S.dishes.flatMap(x=>x.ings.map(norm)), ...Object.keys(S.dept), ...S.pantry])].sort((a,b)=>a.localeCompare(b,'da'));
+  const drawCat = () => sh.querySelectorAll('#dCat button').forEach(b=>b.classList.toggle('on', b.dataset.cat===dish.cat));
+  const pantry = pantrySet();
+  const drawTags = () => {
+    const box = sh.querySelector('#dTags');
+    box.innerHTML = dish.ings.map((g,i)=>`<span class="tag ${pantry.has(norm(g))?'pantry':''}">${esc(g)}<button type="button" data-rm="${i}" aria-label="Fjern">×</button></span>`).join('')
+      + `<input id="dIng" placeholder="Tilføj ingrediens…" autocomplete="off" autocapitalize="none" enterkeyhint="enter">`;
+    const inp = box.querySelector('#dIng');
+    inp.addEventListener('keydown', e => { if (e.key==='Enter' || e.key===','){ e.preventDefault(); add(inp.value); } });
+    inp.addEventListener('input', () => sug(inp.value));
+    inp.addEventListener('blur', () => { if (inp.value.trim()) setTimeout(()=>{ if (sh.isConnected && inp.value.trim()) add(inp.value, true); },150); });
+    box.querySelectorAll('[data-rm]').forEach(b=>b.addEventListener('click', ()=>{ dish.ings.splice(+b.dataset.rm,1); drawTags(); }));
+  };
+  const sug = q => {
+    q = norm(q); const el = sh.querySelector('#dSug');
+    if (!q){ el.innerHTML=''; return; }
+    const have = new Set(dish.ings.map(norm));
+    const list = known().filter(k => k.includes(q) && !have.has(k)).sort((a,b)=>(b.startsWith(q))-(a.startsWith(q))).slice(0,8);
+    el.innerHTML = list.map(k=>`<button type="button" data-s="${esc(k)}">${esc(k)}</button>`).join('');
+    el.querySelectorAll('[data-s]').forEach(b=>b.addEventListener('mousedown', e=>{ e.preventDefault(); add(b.dataset.s); }));
+  };
+  const add = (v, noFocus) => {
+    for (const part of String(v).split(',')){ const n = norm(part); if (n && !dish.ings.map(norm).includes(n)) dish.ings.push(n); }
+    drawTags(); sh.querySelector('#dSug').innerHTML='';
+    if (!noFocus) sh.querySelector('#dIng').focus();
+  };
+  drawCat(); drawTags();
+  sh.querySelector('#dCat').addEventListener('click', e => { const b=e.target.closest('[data-cat]'); if(b){ dish.cat=b.dataset.cat; drawCat(); } });
+  sh.querySelector('#dSave').addEventListener('click', () => {
+    const pending = sh.querySelector('#dIng').value; if (pending.trim()) add(pending, true);
+    dish.name = sh.querySelector('#dName').value.trim(); dish.url = sh.querySelector('#dUrl').value.trim();
+    if (!dish.name){ toast('Retten mangler et navn'); return; }
+    if (S.dishes.some(x => norm(x.name)===norm(dish.name) && x.id!==dish.id)){ toast('Der findes allerede en ret med det navn'); return; }
+    if (existing){ Object.assign(existing, dish); if (dish.cat!=='fast') S.rules.fixed = S.rules.fixed.map(x=>x===dish.id?null:x); }
+    else { dish.id = uid(); S.dishes.push(dish); }
+    save(); closeSheet(); render(); toast('Gemt');
+  });
+  const del = sh.querySelector('#dDel');
+  if (del) del.addEventListener('click', () => {
+    if (!confirmTwice(del)) return;
+    S.dishes = S.dishes.filter(x=>x.id!==dish.id);
+    S.rules.fixed = S.rules.fixed.map(x=>x===dish.id?null:x);
+    for (const p of Object.values(S.plans)) p.days = p.days.map(x=>x===dish.id?null:x);
+    save(); closeSheet(); render(); toast('Slettet');
+  });
+  if (!existing) setTimeout(()=>sh.querySelector('#dName').focus(), 260);
+}
+/* Første tryk spørger, andet tryk udfører. Undgår browserens confirm-dialog. */
+function confirmTwice(btn){
+  if (btn.dataset.armed) return true;
+  btn.dataset.armed = '1'; const old = btn.textContent; btn.textContent = 'Tryk igen';
+  setTimeout(()=>{ if (btn.isConnected){ delete btn.dataset.armed; btn.textContent = old; } }, 2500);
+  return false;
+}
+
+function openItem(name){
+  const cur = S.dept[name] || 'Andet';
+  const sh = openSheet(`<h2>${esc(cap(name))}</h2><label class="f">Afdeling</label>
+    <div class="card list">${DEPTS.map(d=>`<button class="li" data-dept="${d}"><div class="grow t">${d}</div>${d===cur?`<span style="color:var(--accent)">${ICON.check.replace('<svg','<svg width="18" height="18"')}</span>`:''}</button>`).join('')}</div>
+    <div class="btnrow"><button class="btn soft block" id="toPantry">Flyt til "Har altid"</button></div>
+    <p class="hint">"Har altid"-varer vises ikke på indkøbslisten.</p>`);
+  sh.querySelectorAll('[data-dept]').forEach(b=>b.addEventListener('click', ()=>{ S.dept[name]=b.dataset.dept; save(); closeSheet(); render(); }));
+  sh.querySelector('#toPantry').addEventListener('click', ()=>{ if(!S.pantry.includes(name)) S.pantry.push(name); save(); closeSheet(); render(); toast(cap(name)+' er flyttet til "Har altid"'); });
+}
+
+/* ---------- Del, eksport, import ---------- */
+async function shareList(){
+  const p = getPlan(UI.week); const items = shoppingItems(p).filter(i=>!i.pantry && !p.checked[i.name]);
+  let txt = `Indkøb - uge fra lør ${fmtDate(parseYmd(UI.week))}\n`;
+  for (const dept of DEPTS){
+    const list = items.filter(i=>(S.dept[i.name]||'Andet')===dept).sort((a,b)=>a.name.localeCompare(b.name,'da'));
+    if (list.length) txt += `\n${dept}\n` + list.map(i=>'- '+cap(i.name)).join('\n') + '\n';
+  }
+  txt += '\nMadplan\n' + p.days.map((id,d)=>`${DAYS_SHORT[d]}: ${(dishById(id)||{name:'-'}).name}`).join('\n');
+  try {
+    if (navigator.share) await navigator.share({ title:'Indkøbsliste', text:txt });
+    else { await navigator.clipboard.writeText(txt); toast('Kopieret'); }
+  } catch(e){ if (e && e.name!=='AbortError'){ try { await navigator.clipboard.writeText(txt); toast('Kopieret'); } catch(_){} } }
+}
+async function exportData(){
+  const json = JSON.stringify(S, null, 1);
+  const name = `madplan-backup-${ymd(new Date())}.json`;
+  try {
+    const file = new File([json], name, { type:'application/json' });
+    if (navigator.canShare && navigator.canShare({ files:[file] })){ await navigator.share({ files:[file], title:name }); return; }
+  } catch(e){ if (e && e.name==='AbortError') return; }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([json],{type:'application/json'})); a.download = name;
+  document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+function importData(file){
+  const fr = new FileReader();
+  fr.onload = () => {
+    try {
+      const data = JSON.parse(fr.result);
+      if (!data || !Array.isArray(data.dishes) || !data.rules) throw new Error('format');
+      S = data; save(); render(); toast('Backup indlæst');
+    } catch(e){ toast('Filen er ikke en gyldig backup'); }
+  };
+  fr.readAsText(file);
+}
+
+/* ---------- Events ---------- */
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-act],[data-tab]');
+  if (!t) return;
+  if (e.target.closest('[data-stop]')) return; // opskrift-link
+  const act = t.dataset.act || 'tab'; const d = +t.dataset.d;
+  switch(act){
+    case 'tab': UI.tab = t.dataset.tab; closeSheet(true); window.scrollTo(0,0); render(); break;
+    case 'week': UI.week = ymd(addDays(parseYmd(UI.week), +t.dataset.n)); render(); break;
+    case 'generate': generate(UI.week); render(); break;
+    case 'regen': if (!confirmTwice(t)) return; generate(UI.week); render(); break;
+    case 'swap': e.stopPropagation(); swapDay(UI.week, d); break;
+    case 'pick': if (getPlan(UI.week)?.approved){ toast('Tryk "Ret plan" for at ændre'); return; } openPicker(d); break;
+    case 'choose': { const p = getPlan(UI.week,true); const id = t.dataset.id;
+      const other = p.days.findIndex((x,i)=>x===id && i!==d); if (other>=0) p.days[other] = null;
+      p.days[d] = id; save(); closeSheet(); render(); break; }
+    case 'cleardayx': { const p = getPlan(UI.week); p.days[d] = null; save(); closeSheet(); render(); break; }
+    case 'approve': { const p = getPlan(UI.week); const empty = p.days.filter(x=>!x).length;
+      if (empty && !confirmTwice(t)) { toast(empty+' dag(e) uden ret - tryk igen for at godkende'); return; }
+      p.approved = true; save(); UI.tab='shop'; window.scrollTo(0,0); render(); toast('Godkendt - indkøbslisten er klar'); break; }
+    case 'unapprove': getPlan(UI.week).approved = false; save(); render(); break;
+    case 'tick': { const p = getPlan(UI.week); const k = t.dataset.i; p.checked[k] = !p.checked[k]; if(!p.checked[k]) delete p.checked[k]; save(); render(); break; }
+    case 'item': openItem(t.dataset.i); break;
+    case 'unpantry': S.pantry = S.pantry.filter(x=>x!==t.dataset.i); save(); render(); toast(cap(t.dataset.i)+' er på listen'); break;
+    case 'share': shareList(); break;
+    case 'newdish': openDishEditor(null); break;
+    case 'editdish': openDishEditor(t.dataset.id); break;
+    case 'step': { const k=t.dataset.k; const max = k==='avoidWeeks'?4:7; S.rules[k] = Math.max(0, Math.min(max, S.rules[k] + +t.dataset.n)); save(); render(); break; }
+    case 'toggleRow': S.rules.noMeatInRow = !S.rules.noMeatInRow; save(); render(); break;
+    case 'rmPantry': S.pantry = S.pantry.filter(x=>x!==t.dataset.i); save(); render(); break;
+    case 'export': exportData(); break;
+    case 'reset': if (!confirmTwice(t)) return; S = seedState(); save(); render(); toast('Nulstillet'); break;
+  }
+});
+document.addEventListener('input', e => {
+  const k = e.target.dataset.input;
+  if (k==='dishFilter'){ UI.dishFilter = e.target.value; UI.focusSearch = true; renderDishes(); }
+});
+document.addEventListener('change', e => {
+  const k = e.target.dataset.change;
+  if (k==='fixed'){ S.rules.fixed[+e.target.dataset.d] = e.target.value || null; save(); toast('Gælder nye madplaner'); }
+  if (k==='import' && e.target.files[0]) importData(e.target.files[0]);
+});
+document.addEventListener('keydown', e => {
+  if (e.key==='Enter' && e.target.dataset.enter==='addPantry'){
+    const v = norm(e.target.value); if (v && !S.pantry.includes(v)){ S.pantry.push(v); save(); }
+    renderSettings(); const inp = document.querySelector('[data-enter="addPantry"]'); inp && inp.focus();
+  }
+});
+
+render();
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>
