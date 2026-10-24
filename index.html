@@ -5,161 +5,272 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Madplan">
-<meta name="theme-color" content="#f5f2ec" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#141613" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#eef0ea" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e100d" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
 <title>Madplan</title>
 <style>
 :root{
-  --bg:#f5f2ec; --card:#ffffff; --bar:rgba(245,242,236,.88); --text:#1c1e1a; --muted:#6c6f67; --line:#e5e0d6;
-  --accent:#2e6b4b; --accent-soft:#e1ede5; --on-accent:#fff;
-  --meat:#a9432c; --meat-soft:#f6e3dc; --fish:#2a6593; --fish-soft:#dfeaf4;
-  --veg:#2e6b4b; --veg-soft:#e1ede5; --fixed:#86661c; --fixed-soft:#f3ead3;
-  --warn:#a9432c; --shadow:0 1px 2px rgba(30,25,15,.06),0 0 0 1px rgba(30,25,15,.04);
+  color-scheme: light dark;
+  --ground:#eef0ea; --surface:#ffffff; --surface-2:#f3f5ef; --fill:#e7eae2;
+  --ink:#15180f; --ink-2:#565c50; --ink-3:#6b7165; --sep:rgba(48,56,36,.13);
+  --tint:#2c6636; --tint-ink:#ffffff; --tint-soft:#e0ebdc; --tint-wash:rgba(44,102,54,.12);
+  --meat:#a01f47; --meat-soft:#f8e2e9;
+  --fish:#1d5796; --fish-soft:#e0eaf6;
+  --veg:#3d6b1b; --veg-soft:#e7f0da;
+  --fixed:#875810; --fixed-soft:#f5e9d3;
+  --danger:#b3261e;
+  --glass:rgba(255,255,255,.8); --glass-edge:rgba(255,255,255,.85);
+  --glass-shadow:0 12px 32px -10px rgba(24,34,12,.28),0 2px 8px rgba(24,34,12,.08);
+  --glass-hl:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -1px 0 rgba(20,30,10,.05);
+  --thumb:#ffffff; --sheet:var(--ground);
+  --r-group:26px; --r-token:14px;
+  --tab-h:64px; --safe-b:max(env(safe-area-inset-bottom),12px); --safe-t:env(safe-area-inset-top);
+  --ease:cubic-bezier(.22,1,.36,1);
 }
 @media (prefers-color-scheme: dark){
   :root{
-    --bg:#141613; --card:#1f221e; --bar:rgba(20,22,19,.88); --text:#ecebe6; --muted:#9a9d94; --line:#2e322c;
-    --accent:#7cc29a; --accent-soft:#233a2c; --on-accent:#0f1a13;
-    --meat:#ef9a83; --meat-soft:#3d2620; --fish:#8fbfe6; --fish-soft:#1f3040;
-    --veg:#7cc29a; --veg-soft:#233a2c; --fixed:#e2c06e; --fixed-soft:#3a3220;
-    --warn:#ef9a83; --shadow:0 0 0 1px rgba(255,255,255,.05);
+    --ground:#0e100d; --surface:#1a1d18; --surface-2:#242820; --fill:#2c3128;
+    --ink:#eef0ea; --ink-2:#a6ac9e; --ink-3:#959b8d; --sep:rgba(230,240,220,.1);
+    --tint:#8fcf98; --tint-ink:#0d1a10; --tint-soft:#213426; --tint-wash:rgba(143,207,152,.16);
+    --meat:#f291ae; --meat-soft:#3b1826;
+    --fish:#93bdec; --fish-soft:#172739;
+    --veg:#addb84; --veg-soft:#23311a;
+    --fixed:#e6bf6d; --fixed-soft:#372a13;
+    --danger:#ff8a80; --thumb:#454c3f; --sheet:#151813;
+    --glass:rgba(38,42,35,.8); --glass-edge:rgba(255,255,255,.14);
+    --glass-shadow:0 12px 32px -10px rgba(0,0,0,.6),0 2px 8px rgba(0,0,0,.3);
+    --glass-hl:inset 0 1px 0 rgba(255,255,255,.14),inset 0 -1px 0 rgba(0,0,0,.2);
   }
 }
+@media (prefers-reduced-transparency: reduce){
+  :root{ --glass:var(--surface); }
+  .glass{ -webkit-backdrop-filter:none !important; backdrop-filter:none !important; }
+}
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--text);font:16px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;-webkit-tap-highlight-color:transparent;overscroll-behavior-y:none}
-button,input,select,textarea{font:inherit;color:inherit}
-button{cursor:pointer}
-.wrap{max-width:640px;margin:0 auto}
-header.top{position:sticky;top:0;z-index:5;background:var(--bar);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);padding:calc(env(safe-area-inset-top) + 12px) 18px 10px}
-header .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
-h1{font-size:30px;font-weight:750;margin:0;letter-spacing:-.02em}
-.sub{color:var(--muted);font-size:14px}
-main{padding:4px 16px calc(96px + env(safe-area-inset-bottom))}
-nav.tabs{position:fixed;bottom:0;left:0;right:0;z-index:6;background:var(--bar);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:6px 0 calc(4px + env(safe-area-inset-bottom))}
-nav.tabs .wrap{display:grid;grid-template-columns:repeat(4,1fr)}
-.tab{background:none;border:0;color:var(--muted);font-size:11px;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0 2px}
-.tab svg{width:25px;height:25px}
-.tab.on{color:var(--accent)}
-.card{background:var(--card);border-radius:16px;box-shadow:var(--shadow)}
-.section-title{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:22px 4px 8px}
-.chip{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;border-radius:999px;padding:2px 9px;white-space:nowrap}
-.chip.meat{background:var(--meat-soft);color:var(--meat)}
-.chip.fish{background:var(--fish-soft);color:var(--fish)}
-.chip.veg{background:var(--veg-soft);color:var(--veg)}
-.chip.fixed{background:var(--fixed-soft);color:var(--fixed)}
-.btn{appearance:none;border:0;border-radius:13px;padding:14px 18px;font-weight:650;font-size:16px;display:inline-flex;align-items:center;justify-content:center;gap:8px}
-.btn.primary{background:var(--accent);color:var(--on-accent)}
-.btn.soft{background:var(--accent-soft);color:var(--accent)}
-.btn.danger{background:var(--meat-soft);color:var(--meat)}
-.btn.block{width:100%}
-.btn:disabled{opacity:.45}
-.iconbtn{appearance:none;border:0;background:var(--accent-soft);color:var(--accent);width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex:none}
-.iconbtn svg{width:20px;height:20px}
-.iconbtn.plain{background:transparent}
-.btnrow{display:flex;gap:10px;margin-top:18px}
-.btnrow .btn{flex:1}
-a{color:var(--accent)}
+html{-webkit-text-size-adjust:100%;background:var(--ground)}
+body{margin:0;background:var(--ground);color:var(--ink);font:17px/1.35 -apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;overscroll-behavior-y:none}
+button,input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
+button{cursor:pointer;-webkit-user-select:none;user-select:none}
+::selection{background:var(--tint-wash)}
+input,textarea{caret-color:var(--tint)}
+:focus-visible{outline:2.5px solid var(--tint);outline-offset:2px}
+svg{display:block}
+.wrap{max-width:600px;margin:0 auto;padding:0 16px}
+.num{font-variant-numeric:tabular-nums}
 
-/* Week */
-.weeknav{display:flex;align-items:center;justify-content:space-between;margin:2px 0 10px}
-.weeknav .label{font-weight:650;text-align:center}
-.weeknav .label small{display:block;font-weight:400;color:var(--muted);font-size:13px}
-.summary{display:flex;flex-wrap:wrap;gap:6px;margin:0 2px 12px}
-.days{display:flex;flex-direction:column;gap:8px}
-.day{display:grid;grid-template-columns:52px 1fr auto;align-items:center;gap:10px;padding:12px 10px 12px 14px;min-height:72px;text-align:left;border:0;width:100%}
-.day .dname{font-weight:700;font-size:15px;line-height:1.1}
-.day .dname small{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:3px}
-.day .dish{font-weight:600;font-size:17px;line-height:1.25}
-.day .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:5px}
-.day .shared{font-size:12.5px;color:var(--muted);margin-top:5px;line-height:1.35}
-.day .shared b{color:var(--accent);font-weight:600}
-.day.fixedday{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}
-.day .empty{color:var(--muted);font-weight:500}
-.badge-ok{display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-weight:650;font-size:14px}
-.empty-state{text-align:center;padding:48px 20px 24px;color:var(--muted)}
-.empty-state h2{color:var(--text);font-size:20px;margin:0 0 6px}
-.empty-state .btn{margin-top:18px}
+/* Glass: kun på svævende chrome */
+.glass{background:var(--glass);-webkit-backdrop-filter:blur(22px) saturate(1.8);backdrop-filter:blur(22px) saturate(1.8);box-shadow:var(--glass-hl),var(--glass-shadow);border:.5px solid var(--glass-edge)}
 
-/* Lists */
-.list{overflow:hidden}
-.li{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--line);background:none;border-left:0;border-right:0;border-bottom:0;width:100%;text-align:left}
-.li:first-child{border-top:0}
-.li .grow{flex:1;min-width:0}
-.li .t{font-weight:600}
-.li .s{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.li .chev{color:var(--muted);flex:none}
-.search{width:100%;border:0;border-radius:12px;background:var(--card);box-shadow:var(--shadow);padding:11px 14px;font-size:16px;outline:none;margin:4px 0 6px}
+/* Scroll-kant øverst (iOS 26) */
+.topedge{position:fixed;top:0;left:0;right:0;z-index:8;height:calc(var(--safe-t) + 58px);pointer-events:none}
+.topedge::before{content:"";position:absolute;inset:0;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);background:linear-gradient(var(--ground) 0%,color-mix(in srgb,var(--ground) 70%,transparent) 55%,transparent);-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent);opacity:0;transition:opacity .2s}
+.topedge.on::before{opacity:1}
+.topedge .inner{position:relative;max-width:600px;margin:0 auto;height:100%;padding:var(--safe-t) 16px 0;display:flex;align-items:center;justify-content:center}
+.smalltitle{font-size:17px;font-weight:650;opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s var(--ease)}
+.topedge.on .smalltitle{opacity:1;transform:none}
+.actions{position:absolute;right:16px;top:calc(var(--safe-t) + 7px);display:flex;gap:10px;pointer-events:auto}
+.gbtn{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ink);padding:0}
+.gbtn svg{width:21px;height:21px}
+.gbtn.tinted{background:var(--tint);color:var(--tint-ink);border-color:transparent}
+.gbtn:active{transform:scale(.94)}
 
-/* Shopping */
-.shop .li{padding:11px 14px}
-.check{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;background:none;padding:0}
-.check.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
-.check svg{width:15px;height:15px}
-.shop .done .t{text-decoration:line-through;color:var(--muted)}
-.shop .done .s{opacity:.6}
-.reuse{font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:2px 8px;white-space:nowrap;flex:none}
-.legend{font-size:13px;color:var(--muted);margin:0 4px 4px}
-details.pantry{margin-top:22px}
-details.pantry summary{list-style:none;cursor:pointer;color:var(--muted);font-size:14px;padding:6px 4px}
-details.pantry summary::-webkit-details-marker{display:none}
+header.large{padding:calc(var(--safe-t) + 44px) 0 4px}
+header.large h1{font-size:34px;line-height:1.1;font-weight:750;letter-spacing:-.022em;margin:0}
+main{padding-bottom:calc(var(--tab-h) + var(--safe-b) + 108px)}
 
-/* Forms */
-label.f{display:block;font-size:13px;font-weight:600;color:var(--muted);margin:16px 2px 6px}
-input.in,select.in,textarea.in{width:100%;border:0;border-radius:12px;background:var(--card);box-shadow:var(--shadow);padding:12px 14px;font-size:16px;outline:none}
-.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--card);box-shadow:var(--shadow);border-radius:12px;padding:3px;gap:3px}
-.seg button{border:0;background:none;border-radius:9px;padding:9px 4px;font-weight:600;font-size:14px;color:var(--muted)}
-.seg button.on{background:var(--accent);color:var(--on-accent)}
-.tags{display:flex;flex-wrap:wrap;gap:6px;background:var(--card);box-shadow:var(--shadow);border-radius:12px;padding:10px}
-.tag{display:inline-flex;align-items:center;gap:2px;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:4px 4px 4px 11px;font-size:14px;font-weight:550}
-.tag.pantry{background:transparent;box-shadow:inset 0 0 0 1px var(--line);color:var(--muted)}
-.tag button{border:0;background:none;color:inherit;width:24px;height:24px;border-radius:50%;padding:0;display:flex;align-items:center;justify-content:center;font-size:16px;line-height:1}
-.tags input{flex:1;min-width:120px;border:0;background:none;outline:none;padding:5px 4px;font-size:16px}
-.suggest{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.suggest button{border:0;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:6px 12px;font-size:14px}
-.hint{font-size:13px;color:var(--muted);margin:6px 2px 0}
-.setrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-top:1px solid var(--line)}
-.setrow:first-child{border-top:0}
-.setrow select{border:0;background:var(--accent-soft);color:var(--accent);font-weight:600;border-radius:10px;padding:7px 10px;font-size:15px;max-width:60%}
-.stepper{display:flex;align-items:center;gap:10px}
-.stepper button{width:34px;height:34px;border-radius:50%;border:0;background:var(--accent-soft);color:var(--accent);font-size:20px;font-weight:600;line-height:1}
-.stepper span{min-width:18px;text-align:center;font-weight:650;font-variant-numeric:tabular-nums}
-.switch{position:relative;width:51px;height:31px;border-radius:999px;border:0;background:var(--line);flex:none;padding:0;transition:background .2s}
-.switch::after{content:"";position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s}
-.switch.on{background:var(--accent)}
-.switch.on::after{transform:translateX(20px)}
+/* Gruppe-lister */
+.group{background:var(--surface);border-radius:var(--r-group);overflow:hidden}
+.ghead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:26px 6px 8px;font-size:17px;font-weight:700;letter-spacing:-.01em}
+.ghead .aux{font-size:15px;font-weight:500;color:var(--ink-2)}
+.gfoot{font-size:13px;color:var(--ink-2);margin:8px 16px 0;line-height:1.4}
+.row{position:relative;display:flex;align-items:center;gap:14px;width:100%;min-height:56px;padding:10px 16px;background:none;border:0;text-align:left}
+.row + .row::before{content:"";position:absolute;top:0;left:var(--inset,16px);right:0;height:.5px;background:var(--sep)}
+button.row:active,.row.press:active{background:var(--surface-2)}
+.row .main{flex:1;min-width:0}
+.row .t{font-weight:600;font-size:17px;line-height:1.25}
+.row .s{font-size:15px;color:var(--ink-2);margin-top:2px;line-height:1.3}
+.row .s.two{display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.row .s.clip{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .trail{flex:none;color:var(--ink-3);display:flex;align-items:center;gap:8px}
+.row .trail svg{width:18px;height:18px}
+.row.destructive .t{color:var(--danger);font-weight:500}
+.row .val{color:var(--ink-2);font-size:17px}
 
-/* Sheet */
-.backdrop{position:fixed;inset:0;z-index:20;background:rgba(10,10,8,.38);display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .2s}
+/* Kategori */
+.k-fisk{--c:var(--fish);--cs:var(--fish-soft)} .k-kod{--c:var(--meat);--cs:var(--meat-soft)}
+.k-veg{--c:var(--veg);--cs:var(--veg-soft)} .k-fast{--c:var(--fixed);--cs:var(--fixed-soft)} .k-none{--c:var(--ink-3);--cs:var(--fill)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
+.cat{font-weight:600;color:var(--c)}
+
+/* Uge */
+.week{display:flex;align-items:center;justify-content:space-between;margin:10px 0 2px;background:var(--surface);border-radius:999px;padding:4px}
+.week button{width:44px;height:44px;border-radius:50%;border:0;background:none;color:var(--ink);display:flex;align-items:center;justify-content:center}
+.week button:active{background:var(--surface-2)}
+.week button svg{width:20px;height:20px}
+.week .lbl{text-align:center;font-weight:650;font-size:16px;line-height:1.2}
+.week .lbl span{display:block;font-weight:400;color:var(--ink-2);font-size:14px}
+.balance{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin:10px 6px 0;font-size:15px;color:var(--ink-2)}
+.balance .b{display:inline-flex;align-items:center;gap:6px;color:var(--ink)}
+.balance .ok{display:inline-flex;align-items:center;gap:5px;color:var(--tint);font-weight:650}
+.balance .ok svg{width:16px;height:16px}
+
+.days{margin-top:10px}
+.day{--inset:76px;min-height:60px;padding:7px 12px 7px 14px;transition:opacity .2s var(--ease)}
+.token{width:46px;height:46px;border-radius:var(--r-token);background:var(--cs);color:var(--c);display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;line-height:1;transition:box-shadow .2s var(--ease)}
+.token b{font-size:11.5px;font-weight:750;letter-spacing:.06em;text-transform:uppercase}
+.token i{font-style:normal;font-size:19px;font-weight:700;margin-top:3px}
+.day .s{display:flex;gap:4px;white-space:nowrap;min-width:0}
+.day .s .lst{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.day .s mark{background:none;color:var(--ink);font-weight:600}
+.swap{width:40px;height:40px;border-radius:50%;border:0;background:var(--surface-2);color:var(--tint);display:flex;align-items:center;justify-content:center;flex:none}
+.swap svg{width:19px;height:19px}
+.swap:active{background:var(--tint-soft)}
+.days.hl .day:not(.lit){opacity:.32}
+.days.hl .day.lit .token{box-shadow:0 0 0 2px var(--c)}
+.days.hl .day.lit .s mark.on{color:var(--tint);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1.5px}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:14px}
+.chipbtn{display:inline-flex;align-items:center;gap:7px;min-height:38px;padding:7px 13px;border-radius:999px;border:0;background:var(--surface-2);font-size:15px;font-weight:550}
+.chipbtn .n{font-size:13px;font-weight:700;color:var(--ink-2)}
+.chipbtn[aria-pressed="true"]{background:var(--tint);color:var(--tint-ink)}
+.chipbtn[aria-pressed="true"] .n{color:inherit;opacity:.8}
+
+/* Tom tilstand */
+.empty{padding:28px 22px 26px;text-align:left}
+.empty h2{font-size:22px;letter-spacing:-.015em;margin:0 0 6px}
+.empty p{margin:0;color:var(--ink-2);font-size:16px;line-height:1.45}
+.empty ul{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:8px;font-size:15px}
+.empty li{display:flex;align-items:center;gap:10px}
+
+/* Indkøb */
+.progress{margin:12px 6px 0}
+.progress .big{font-size:28px;font-weight:750;letter-spacing:-.02em}
+.progress .big span{font-size:17px;font-weight:500;color:var(--ink-2);letter-spacing:0}
+.bar{height:6px;border-radius:3px;background:var(--fill);margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--tint);border-radius:3px;transition:width .3s var(--ease)}
+.item{--inset:58px;min-height:60px;padding-right:6px}
+.check{width:28px;height:28px;border-radius:50%;box-shadow:inset 0 0 0 2px var(--ink-3);flex:none;display:flex;align-items:center;justify-content:center;color:var(--tint-ink);transition:background .1s,box-shadow .1s}
+.check svg{width:16px;height:16px;opacity:0}
+.item.done .check{background:var(--tint);box-shadow:none}
+.item.done .check svg{opacity:1}
+.item.done .t{color:var(--ink-2);text-decoration:line-through;text-decoration-thickness:1.5px}
+.reuse{font-size:13px;font-weight:700;color:var(--tint);background:var(--tint-soft);border-radius:999px;padding:3px 9px;white-space:nowrap}
+.more{width:44px;height:44px;border-radius:50%;border:0;background:none;color:var(--ink-3);display:flex;align-items:center;justify-content:center;flex:none}
+.more:active{background:var(--surface-2)}
+.more svg{width:20px;height:20px}
+.itemwrap{position:relative;display:flex;align-items:center}
+.itemwrap + .itemwrap::before{content:"";position:absolute;top:0;left:58px;right:0;height:.5px;background:var(--sep)}
+.itemwrap .row::before{display:none}
+.itemwrap > .row{flex:1 1 auto;min-width:0}
+details.fold > summary{list-style:none;cursor:pointer}
+details.fold > summary::-webkit-details-marker{display:none}
+details.fold .ghead svg{width:16px;height:16px;transition:transform .2s var(--ease);color:var(--ink-2)}
+details.fold[open] .ghead svg{transform:rotate(90deg)}
+
+/* Søgning */
+.searchbox{display:flex;align-items:center;gap:8px;background:var(--fill);border-radius:999px;padding:0 14px;height:44px;margin-top:10px}
+.searchbox svg{width:18px;height:18px;color:var(--ink-3);flex:none}
+.searchbox input{flex:1;border:0;background:none;outline:none;font-size:17px;height:100%;min-width:0}
+.searchbox input::placeholder{color:var(--ink-3)}
+
+/* Felter */
+.field{display:block;width:100%;border:0;background:none;outline:none;font-size:17px;padding:16px;min-height:56px}
+.field::placeholder{color:var(--ink-3)}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--fill);border-radius:999px;padding:3px;gap:2px}
+.seg button{border:0;background:none;border-radius:999px;min-height:38px;padding:6px 4px;font-weight:600;font-size:15px;color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:var(--thumb);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.tags{display:flex;flex-wrap:wrap;gap:8px;padding:14px}
+.tag{display:inline-flex;align-items:center;gap:2px;min-height:34px;background:var(--tint-soft);color:var(--tint);border-radius:999px;padding:3px 3px 3px 13px;font-size:15px;font-weight:600}
+.tag.muted{background:var(--surface-2);color:var(--ink-2)}
+.tag button{width:30px;height:30px;border-radius:50%;border:0;background:none;color:inherit;display:flex;align-items:center;justify-content:center;padding:0}
+.tag button svg{width:14px;height:14px}
+.tags input{flex:1 1 140px;border:0;background:none;outline:none;font-size:17px;min-height:34px;padding:0 4px}
+.tags input::placeholder{color:var(--ink-3)}
+.suggest{display:flex;flex-wrap:wrap;gap:8px;padding:0 14px 14px}
+.suggest:empty{display:none}
+.suggest button{border:0;background:var(--surface-2);border-radius:999px;min-height:36px;padding:6px 13px;font-size:15px}
+select.menu{appearance:none;-webkit-appearance:none;border:0;background:var(--surface-2);color:var(--tint);font-weight:600;font-size:16px;border-radius:999px;min-height:36px;padding:6px 32px 6px 14px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%232c6636' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 9 5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+@media (prefers-color-scheme: dark){ select.menu{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238fcf98' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 9 5 5 5-5'/%3E%3C/svg%3E")} }
+.stepper{display:flex;align-items:center;gap:4px;background:var(--surface-2);border-radius:999px;padding:3px}
+.stepper button{width:38px;height:38px;border-radius:50%;border:0;background:none;color:var(--tint);display:flex;align-items:center;justify-content:center}
+.stepper button:active{background:var(--surface)}
+.stepper button:disabled{color:var(--ink-3);opacity:.5}
+.stepper button svg{width:17px;height:17px}
+.stepper span{min-width:22px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+.switch{position:relative;width:52px;height:32px;border-radius:999px;border:0;background:var(--fill);flex:none;padding:0;transition:background .2s}
+.switch::after{content:"";position:absolute;top:2px;left:2px;width:28px;height:28px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.2);transition:transform .25s var(--ease)}
+.switch[aria-checked="true"]{background:var(--tint)}
+.switch[aria-checked="true"]::after{transform:translateX(20px)}
+
+/* Dock + tab bar */
+.dock{position:fixed;left:0;right:0;bottom:calc(var(--safe-b) + var(--tab-h) + 12px);z-index:9;display:flex;justify-content:center;pointer-events:none;padding:0 16px}
+.dock[hidden]{display:none}
+.dock .glass{pointer-events:auto;display:flex;gap:6px;padding:6px;border-radius:999px;max-width:420px;width:100%}
+.dbtn{flex:1;min-height:48px;border:0;border-radius:999px;background:none;font-weight:650;font-size:16px;display:inline-flex;align-items:center;justify-content:center;gap:8px;color:var(--tint);padding:0 16px}
+.dbtn svg{width:19px;height:19px}
+.dbtn.primary{background:var(--tint);color:var(--tint-ink)}
+.dbtn:active{transform:scale(.97)}
+.dbtn[data-armed]{background:var(--ink);color:var(--ground)}
+nav.tabbar{position:fixed;left:0;right:0;bottom:var(--safe-b);z-index:10;display:flex;justify-content:center;padding:0 16px;pointer-events:none}
+nav.tabbar .glass{pointer-events:auto;position:relative;display:grid;grid-template-columns:repeat(4,1fr);width:100%;max-width:420px;height:var(--tab-h);border-radius:999px;padding:4px}
+.lens{position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 8px)/4);border-radius:999px;background:var(--tint-wash);transition:transform .35s var(--ease)}
+.tab{position:relative;z-index:1;border:0;background:none;color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;font-weight:600;border-radius:999px}
+.tab svg{width:24px;height:24px}
+.tab[aria-current="page"]{color:var(--tint)}
+
+/* Sheets */
+.backdrop{position:fixed;inset:0;z-index:20;background:rgba(8,12,4,.32);display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .22s}
 .backdrop.show{opacity:1}
-.sheet{background:var(--bg);width:100%;max-width:640px;max-height:90vh;max-height:90dvh;overflow:auto;-webkit-overflow-scrolling:touch;border-radius:20px 20px 0 0;padding:8px 16px calc(22px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.sheet{background:var(--sheet);width:100%;max-width:600px;max-height:calc(100dvh - var(--safe-t) - 12px);overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;border-radius:34px 34px 0 0;padding:0 16px calc(var(--safe-b) + 20px);transform:translateY(100%);transition:transform .32s var(--ease)}
 .backdrop.show .sheet{transform:none}
-.grab{width:38px;height:5px;border-radius:3px;background:var(--line);margin:2px auto 10px}
-.sheet h2{font-size:21px;margin:4px 2px 4px;letter-spacing:-.01em}
-.sheet .sheethead{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.warnline{font-size:12.5px;color:var(--warn);margin-top:2px}
-.okline{font-size:12.5px;color:var(--accent);margin-top:2px}
-.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--text);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;font-weight:550;opacity:0;transition:all .2s;z-index:30;pointer-events:none;max-width:90vw;text-align:center}
-.toast.show{opacity:1;transform:translate(-50%,0)}
-.muted{color:var(--muted)}
-.small{font-size:13px}
+.grabber{width:38px;height:5px;border-radius:3px;background:var(--fill);margin:8px auto 0}
+.sheetbar{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0 10px;background:linear-gradient(var(--sheet) 75%,transparent)}
+.sheetbar h2{flex:1;text-align:center;font-size:17px;font-weight:650;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sheetbar .gbtn{flex:none}
+.sheetbar .spacer{width:44px;flex:none}
+.sheet .lead{margin:6px 6px 0}
+.sheet .lead h3{font-size:28px;letter-spacing:-.02em;margin:4px 0 4px;line-height:1.15}
+.sheet .lead p{margin:0;color:var(--ink-2);font-size:15px;line-height:1.45}
+.openlink{display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px;margin-top:16px;border-radius:999px;background:var(--tint-soft);color:var(--tint);font-weight:650;text-decoration:none}
+.openlink svg{width:18px;height:18px}
+.warn{display:flex!important;align-items:center;gap:5px;color:var(--ink-2);font-size:14px;margin-top:2px}
+.warn svg{width:15px;height:15px;flex:none;color:var(--ink-2)}
+.good{color:var(--tint);font-size:14px;margin-top:2px}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:calc(var(--safe-b) + var(--tab-h) + 12px);z-index:30;transform:translate(-50%,12px);opacity:0;pointer-events:none;display:flex;align-items:center;gap:12px;border-radius:999px;padding:8px 8px 8px 18px;font-size:15px;font-weight:550;max-width:calc(100vw - 32px);transition:opacity .2s,transform .25s var(--ease)}
+.toast #toastmsg{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.has-dock .toast{bottom:calc(var(--safe-b) + var(--tab-h) + 80px)}
+.toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.toast.noact{padding-right:18px}
+.toast button{border:0;border-radius:999px;background:var(--tint);color:var(--tint-ink);font-weight:650;min-height:36px;padding:0 14px}
+.toast button:empty{display:none}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important}
+}
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap row"><div><h1 id="title">Madplan</h1></div><div id="hact"></div></div></header>
-<main><div class="wrap" id="view"></div></main>
-<nav class="tabs"><div class="wrap">
-  <button class="tab" data-tab="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Madplan</button>
-  <button class="tab" data-tab="shop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h2l2 11h10l2-8H7"/><circle cx="9.5" cy="19.5" r="1.3"/><circle cx="17" cy="19.5" r="1.3"/></svg>Indkøb</button>
-  <button class="tab" data-tab="dishes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="7.5"/><circle cx="12" cy="13" r="4"/><path d="M12 2.5v3"/></svg>Retter</button>
-  <button class="tab" data-tab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>Indstillinger</button>
+<div class="topedge" id="topedge"><div class="inner"><div class="smalltitle" id="smalltitle">Madplan</div><div class="actions" id="actions"></div></div></div>
+<main><div class="wrap">
+  <header class="large"><h1 id="title">Madplan</h1></header>
+  <div id="view"></div>
+</div></main>
+<div class="dock" id="dock" hidden><div class="glass" id="dockinner"></div></div>
+<nav class="tabbar" aria-label="Faner"><div class="glass">
+  <span class="lens" id="lens"></span>
+  <button class="tab" data-tab="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="4"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Madplan</button>
+  <button class="tab" data-tab="shop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1.3 9.2a2 2 0 0 1-2 1.8H8.3a2 2 0 0 1-2-1.8z"/><path d="M9 9V7a3 3 0 0 1 6 0v2"/></svg>Indkøb</button>
+  <button class="tab" data-tab="dishes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16a8 8 0 0 1-16 0z"/><path d="M9 8c0-1.5 1-2 1-3.5M13 8c0-1.5 1-2 1-3.5"/></svg>Retter</button>
+  <button class="tab" data-tab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2.2"/><circle cx="9" cy="17" r="2.2"/></svg>Indstillinger</button>
 </div></nav>
-<div class="toast" id="toast"></div>
+<div class="toast glass" id="toast" role="status" aria-live="polite"><span id="toastmsg"></span><button id="toastbtn"></button></div>
 
 <script>
 'use strict';
@@ -167,21 +278,28 @@ input.in,select.in,textarea.in{width:100%;border:0;border-radius:12px;background
 const DAYS = ['Lørdag','Søndag','Mandag','Tirsdag','Onsdag','Torsdag','Fredag'];
 const DAYS_SHORT = ['Lør','Søn','Man','Tir','Ons','Tor','Fre'];
 const MONTHS = ['jan.','feb.','mar.','apr.','maj','jun.','jul.','aug.','sep.','okt.','nov.','dec.'];
-const CATS = { fisk:{l:'Fisk',c:'fish'}, kod:{l:'Kød',c:'meat'}, veg:{l:'Vegetar',c:'veg'}, fast:{l:'Fast ret',c:'fixed'} };
+const CATS = { fisk:{l:'Fisk'}, kod:{l:'Kød'}, veg:{l:'Vegetar'}, fast:{l:'Fast ret'} };
 const DEPTS = ['Frugt & grønt','Kød & fisk','Mejeri','Brød','Kolonial','Frost','Andet'];
 const STORE_KEY = 'madplan.v1';
 
+const svg = (d, w=1.9) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
 const ICON = {
-  shuffle:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h4v4M20 4l-6.5 6.5M4 20l6-6M16 20h4v-4M20 20 4 4"/></svg>',
-  left:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></svg>',
-  right:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></svg>',
-  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
-  share:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7.5 7.5 12 3l4.5 4.5M5 12v6.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V12"/></svg>',
-  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
-  link:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>',
-  chev:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></svg>',
+  shuffle: svg('<path d="M16 4h4v4M20 4l-6.5 6.5M4 20l6-6M16 20h4v-4M20 20 4 4"/>',2),
+  left: svg('<path d="m15 5-7 7 7 7"/>',2.2),
+  right: svg('<path d="m9 5 7 7-7 7"/>',2.2),
+  chev: svg('<path d="m9 5 7 7-7 7"/>',2.2),
+  plus: svg('<path d="M12 5v14M5 12h14"/>',2.2),
+  minus: svg('<path d="M5 12h14"/>',2.2),
+  close: svg('<path d="M6 6l12 12M18 6 6 18"/>',2.2),
+  check: svg('<path d="m5 12.5 4.5 4.5L19 7.5"/>',2.6),
+  share: svg('<path d="M12 3.5v11M7.5 8 12 3.5 16.5 8M6 12.5v6A1.5 1.5 0 0 0 7.5 20h9a1.5 1.5 0 0 0 1.5-1.5v-6"/>'),
+  more: svg('<circle cx="5.5" cy="12" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/><circle cx="18.5" cy="12" r="1.3" fill="currentColor"/>'),
+  search: svg('<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/>',2),
+  out: svg('<path d="M14 4h6v6M20 4l-9 9M18 14v4.5A1.5 1.5 0 0 1 16.5 20h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6H10"/>'),
+  sparkle: svg('<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.4 2.4M15.3 15.3l2.4 2.4M6.3 17.7l2.4-2.4M15.3 8.7l2.4-2.4"/>'),
+  alert: svg('<path d="M12 4 2.8 19.5h18.4z"/><path d="M12 10v4.2M12 17.2v.1"/>',2),
+  sealed: svg('<path d="m5 12.5 4.5 4.5L19 7.5"/>',2.4),
 };
-
 /* ---------- Startdata ---------- */
 const SEED_DISHES = [
   ['fiskedeller','Fiskedeller','fisk','torskefilet, dild, mælk, æg, hvedemel, citron','https://www.arla.dk/opskrifter/fiskefrikadeller/'],
@@ -260,8 +378,6 @@ function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; 
 function saturdayOf(d){ const x=new Date(d.getFullYear(),d.getMonth(),d.getDate()); return addDays(x, -((x.getDay()+1)%7)); }
 const fmtDate = d => d.getDate()+'. '+MONTHS[d.getMonth()];
 
-let toastT;
-function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2200); }
 
 /* ---------- UI-tilstand ---------- */
 const UI = { tab:'plan', week: ymd(saturdayOf(new Date())), dishFilter:'' };
@@ -419,212 +535,295 @@ function rankFor(key, d){
 }
 
 /* ---------- Render ---------- */
-function setHeader(title, actionHtml){ $('#title').textContent = title; $('#hact').innerHTML = actionHtml || ''; }
+/* ---------- Toast med valgfri handling ---------- */
+let toastT, toastAct = null;
+function toast(msg, actLabel, onAct){
+  const t = $('#toast'); $('#toastmsg').textContent = msg;
+  const b = $('#toastbtn'); b.textContent = actLabel || ''; toastAct = onAct || null;
+  t.classList.toggle('noact', !actLabel); t.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(()=>t.classList.remove('show'), actLabel ? 4500 : 2200);
+}
+$('#toastbtn').addEventListener('click', () => { const f = toastAct; toastAct = null; $('#toast').classList.remove('show'); f && f(); });
+
+/* Første tryk spørger, andet tryk udfører */
+function confirmTwice(btn, label){
+  if (btn.dataset.armed) return true;
+  btn.dataset.armed = '1'; const old = btn.innerHTML;
+  const t = btn.querySelector('.t'); if (t) t.textContent = label || 'Tryk igen for at bekræfte'; else btn.textContent = label || 'Tryk igen';
+  setTimeout(()=>{ if (btn.isConnected && btn.dataset.armed){ delete btn.dataset.armed; btn.innerHTML = old; } }, 3000);
+  return false;
+}
+
+/* ---------- Chrome ---------- */
+function setTitle(t){ $('#title').textContent = t; $('#smalltitle').textContent = t; document.title = t + ' · Madplan'; }
+function setActions(html){ $('#actions').innerHTML = html || ''; }
+function setDock(html){ const d = $('#dock'); document.body.classList.toggle('has-dock', !!html); if (!html){ d.hidden = true; return; } d.hidden = false; $('#dockinner').innerHTML = html; }
+const gbtn = (act, icon, label, extra='') => `<button class="gbtn glass ${extra}" data-act="${act}" aria-label="${label}">${icon}</button>`;
+new IntersectionObserver(([e]) => $('#topedge').classList.toggle('on', !e.isIntersecting), { rootMargin:'-60px 0px 0px 0px' }).observe($('#title'));
+
+const TABS = ['plan','shop','dishes','settings'];
 function render(){
-  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.tab===UI.tab));
+  const i = TABS.indexOf(UI.tab);
+  document.querySelectorAll('.tab').forEach(t => { if (t.dataset.tab===UI.tab) t.setAttribute('aria-current','page'); else t.removeAttribute('aria-current'); });
+  $('#lens').style.transform = `translateX(${i*100}%)`;
   ({plan:renderPlan, shop:renderShop, dishes:renderDishes, settings:renderSettings})[UI.tab]();
 }
-const chip = cat => cat && CATS[cat] ? `<span class="chip ${CATS[cat].c}">${CATS[cat].l}</span>` : '';
+const catCls = c => 'k-' + (CATS[c] ? c : 'none');
+const catLabel = c => `<span class="cat">${CATS[c] ? CATS[c].l : 'Ingen ret'}</span>`;
 
 function weekNav(){
-  const sat = parseYmd(UI.week), fri = addDays(sat,6);
-  const thisSat = ymd(saturdayOf(new Date()));
-  const rel = UI.week===thisSat ? 'Denne uge' : (UI.week===ymd(addDays(saturdayOf(new Date()),7)) ? 'Næste uge' : (UI.week < thisSat ? 'Tidligere uge' : 'Senere uge'));
-  return `<div class="weeknav"><button class="iconbtn plain" data-act="week" data-n="-7" aria-label="Forrige uge">${ICON.left}</button>
-    <div class="label">${rel}<small>lør ${fmtDate(sat)} - fre ${fmtDate(fri)}</small></div>
-    <button class="iconbtn plain" data-act="week" data-n="7" aria-label="Næste uge">${ICON.right}</button></div>`;
+  const sat = parseYmd(UI.week), fri = addDays(sat,6), thisSat = ymd(saturdayOf(new Date()));
+  const rel = UI.week===thisSat ? 'Denne uge' : UI.week===ymd(addDays(saturdayOf(new Date()),7)) ? 'Næste uge' : UI.week===ymd(addDays(saturdayOf(new Date()),-7)) ? 'Sidste uge' : 'Uge fra ' + fmtDate(sat);
+  return `<div class="week"><button data-act="week" data-n="-7" aria-label="Forrige uge">${ICON.left}</button>
+    <div class="lbl">${rel}<span class="num">Lør ${fmtDate(sat)} - fre ${fmtDate(fri)}</span></div>
+    <button data-act="week" data-n="7" aria-label="Næste uge">${ICON.right}</button></div>`;
 }
 
+/* ---------- Madplan ---------- */
+function repeats(p, pantry){
+  const cnt = new Map();
+  p.days.forEach(id => { if (id) ingsFor(id,pantry).forEach(g => cnt.set(g,(cnt.get(g)||0)+1)); });
+  return [...cnt].filter(([,n])=>n>1).sort((a,b)=>b[1]-a[1] || a[0].localeCompare(b[0],'da'));
+}
 function renderPlan(){
-  setHeader('Madplan');
-  const p = getPlan(UI.week);
+  setTitle('Madplan'); setActions('');
+  const p = getPlan(UI.week); const r = S.rules;
   let h = weekNav();
   if (!p || !p.days.some((id,d)=>id && isFree(d))){
-    h += `<div class="empty-state"><h2>Ingen madplan endnu</h2><div>Faste dage er sat. Appen foreslår resten ud fra jeres regler og genbrug af råvarer.</div>
-      <button class="btn primary" data-act="generate">Lav madplan</button></div>`;
-    $('#view').innerHTML = h; return;
+    const fixed = r.fixed.map((id,d)=>id?`${DAYS_SHORT[d].toLowerCase()} ${(dishById(id)||{name:'?'}).name.toLowerCase()}`:null).filter(Boolean);
+    h += `<div class="group empty" style="margin-top:14px"><h2>Ugen er ikke planlagt</h2>
+      <p>Appen udfylder de frie dage og vælger retter, der deler råvarer, så I køber mindre og bruger det hele.</p>
+      <ul><li class="k-fisk"><span class="dot"></span>${r.fish} fiskedag${r.fish===1?'':'e'}</li>
+      <li class="k-kod"><span class="dot"></span>Højst ${r.maxMeat} kød-dage${r.noMeatInRow?', aldrig to i træk':''}</li>
+      ${fixed.length?`<li class="k-fast"><span class="dot"></span>Faste dage: ${esc(fixed.join(', '))}</li>`:''}</ul></div>`;
+    $('#view').innerHTML = h;
+    setDock(`<button class="dbtn primary" data-act="generate">${ICON.sparkle}Lav madplan</button>`);
+    return;
   }
   const pantry = pantrySet(); const chk = check(p.days, UI.week);
   const veg = p.days.filter((id,d)=>id&&isFree(d)&&catOf(id)==='veg').length;
-  h += `<div class="summary">${chip('fisk').replace('Fisk',chk.fish+' fisk')}${chip('kod').replace('Kød',chk.meat+' kød')}${chip('veg').replace('Vegetar',veg+' vegetar')}<span class="chip fixed">${overlap(p.days,pantry)} delte råvarer</span></div>`;
-  h += '<div class="days">';
+  const rep = repeats(p, pantry);
+  const hl = rep.some(([g])=>g===UI.hl) ? UI.hl : null; UI.hl = hl;
+  h += `<div class="balance"><span class="b k-fisk"><span class="dot"></span><span class="num">${chk.fish}</span> fisk</span>
+    <span class="b k-kod"><span class="dot"></span><span class="num">${chk.meat}</span> kød</span>
+    <span class="b k-veg"><span class="dot"></span><span class="num">${veg}</span> vegetar</span>
+    ${p.approved ? `<span class="ok">${ICON.sealed}Godkendt</span>` : ''}</div>`;
+  h += `<div class="group days ${hl?'hl':''}">`;
+  const sat = parseYmd(UI.week);
   for (let d=0; d<7; d++){
-    const id = p.days[d], dish = dishById(id), sat = parseYmd(UI.week);
+    const id = p.days[d], dish = dishById(id), free = isFree(d);
     const others = new Set(); p.days.forEach((x,i)=>{ if(i!==d && x) ingsFor(x,pantry).forEach(g=>others.add(g)); });
-    const shared = dish ? ingsFor(id,pantry).filter(g=>others.has(g)) : [];
-    const fixed = !isFree(d);
-    h += `<div class="card day ${fixed?'fixedday':''}" data-act="pick" data-d="${d}" role="button">
-      <div class="dname">${DAYS_SHORT[d]}<small>${fmtDate(addDays(sat,d))}</small></div>
-      <div>${dish ? `<div class="dish">${esc(dish.name)}</div><div class="meta">${chip(dish.cat)}${dish.url?`<a href="${esc(dish.url)}" target="_blank" rel="noopener" class="chip" style="background:var(--accent-soft);color:var(--accent)" data-stop="1">Opskrift</a>`:''}</div>
-        ${shared.length?`<div class="shared">Deler <b>${esc(shared.join(', '))}</b></div>`:''}` : '<div class="empty">Vælg ret</div>'}</div>
-      <div>${(!fixed && !p.approved) ? `<button class="iconbtn" data-act="swap" data-d="${d}" aria-label="Byt ret">${ICON.shuffle}</button>` : ''}</div>
+    let shared = dish ? ingsFor(id,pantry).filter(g=>others.has(g)) : [];
+    const lit = hl && shared.includes(hl);
+    if (lit) shared = [hl, ...shared.filter(g=>g!==hl)];
+    const shown = shared.map(g=>`<mark class="${g===hl?'on':''}">${esc(g)}</mark>`).join(', ');
+    const sub = dish ? `${catLabel(dish.cat)}${shared.length?`<span>· Deler ${shared.length}:</span><span class="lst">${shown}</span>`:''}` : (free ? 'Tryk for at vælge' : 'Fast dag uden ret');
+    h += `<div class="row day press ${catCls(dish?dish.cat:null)} ${lit?'lit':''}" data-act="day" data-d="${d}" role="button" tabindex="0" aria-label="${DAYS[d]}: ${esc(dish?dish.name:'ingen ret')}">
+      <div class="token"><b>${DAYS_SHORT[d]}</b><i class="num">${addDays(sat,d).getDate()}</i></div>
+      <div class="main"><div class="t">${dish?esc(dish.name):'<span style="color:var(--ink-2)">Ingen ret</span>'}</div><div class="s">${sub}</div></div>
+      ${(free && !p.approved) ? `<button class="swap" data-act="swap" data-d="${d}" aria-label="Byt ${DAYS[d].toLowerCase()}s ret">${ICON.shuffle}</button>` : ''}
     </div>`;
   }
   h += '</div>';
-  if (p.approved){
-    h += `<div class="btnrow"><button class="btn soft" data-act="unapprove">Ret plan</button><button class="btn primary" data-act="tab" data-tab="shop">Indkøbsliste</button></div>`;
-  } else {
-    h += `<div class="btnrow"><button class="btn soft" data-act="regen">Ny madplan</button><button class="btn primary" data-act="approve">Godkend</button></div>
-      <p class="hint" style="text-align:center">Tryk på en dag for at vælge selv, eller ${'⇄'} for at bytte.</p>`;
+  if (rep.length){
+    h += `<div class="ghead">Går igen<span class="aux">${rep.length} råvarer</span></div>
+      <div class="group chips">${rep.map(([g,n])=>`<button class="chipbtn" data-act="hl" data-i="${esc(g)}" aria-pressed="${g===hl}">${esc(g)}<span class="n num">×${n}</span></button>`).join('')}</div>
+      <p class="gfoot">Tryk på en råvare for at se, hvilke dage den bruges.</p>`;
   }
   $('#view').innerHTML = h;
+  setDock(p.approved
+    ? `<button class="dbtn" data-act="unapprove">Ret plan</button><button class="dbtn primary" data-act="tab" data-tab="shop">Indkøbsliste</button>`
+    : `<button class="dbtn" data-act="regen">${ICON.shuffle}Ny plan</button><button class="dbtn primary" data-act="approve">${ICON.check}Godkend</button>`);
 }
 
+/* ---------- Indkøb ---------- */
 function shoppingItems(p){
   const pantry = pantrySet(); const map = new Map();
   p.days.forEach((id,d) => {
     const dish = dishById(id); if (!dish) return;
     for (const raw of new Set(dish.ings.map(norm))){
       if (!map.has(raw)) map.set(raw, { name:raw, dishes:[], pantry:pantry.has(raw) });
-      map.get(raw).dishes.push(DAYS_SHORT[d]+' '+dish.name);
+      map.get(raw).dishes.push(dish.name);
     }
   });
   return [...map.values()];
 }
 function renderShop(){
   const p = getPlan(UI.week);
-  setHeader('Indkøb', p && p.approved ? `<button class="iconbtn" data-act="share" aria-label="Del liste">${ICON.share}</button>` : '');
+  setTitle('Indkøb');
   let h = weekNav();
   if (!p || !p.approved){
-    h += `<div class="empty-state"><h2>Ingen godkendt madplan</h2><div>Indkøbslisten dannes, når ugens madplan er godkendt.</div>
-      <button class="btn primary" data-act="tab" data-tab="plan">Gå til madplan</button></div>`;
-    $('#view').innerHTML = h; return;
+    setActions('');
+    h += `<div class="group empty" style="margin-top:14px"><h2>Ingen indkøbsliste endnu</h2><p>Listen laves, når ugens madplan er godkendt. Varer I altid har, kommer ikke med.</p></div>`;
+    $('#view').innerHTML = h;
+    setDock(`<button class="dbtn primary" data-act="tab" data-tab="plan">Gå til madplan</button>`);
+    return;
   }
+  setActions(gbtn('share', ICON.share, 'Del indkøbsliste'));
+  setDock('');
   const items = shoppingItems(p);
   const buy = items.filter(i=>!i.pantry), have = items.filter(i=>i.pantry);
-  const left = buy.filter(i=>!p.checked[i.name]).length;
-  h += `<p class="legend">${left} af ${buy.length} varer mangler · tryk på en vare for at flytte afdeling</p>`;
+  const done = buy.filter(i=>p.checked[i.name]), todo = buy.filter(i=>!p.checked[i.name]);
+  const pct = buy.length ? Math.round(done.length/buy.length*100) : 0;
+  h += `<div class="progress">${todo.length ? `<div class="big num">${todo.length} <span>af ${buy.length} varer mangler</span></div>` : `<div class="big">Alt er i kurven</div>`}
+    <div class="bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="Fremskridt"><i style="width:${pct}%"></i></div></div>`;
+  const itemRow = it => {
+    const on = !!p.checked[it.name];
+    return `<div class="itemwrap"><button class="row item ${on?'done':''}" data-act="tick" data-i="${esc(it.name)}" aria-pressed="${on}">
+      <span class="check">${ICON.check}</span>
+      <span class="main"><span class="t" style="display:block">${esc(cap(it.name))}</span><span class="s two" style="display:block">${esc(it.dishes.join(', '))}</span></span>
+      ${it.dishes.length>1 && !on ? `<span class="trail"><span class="reuse num">${it.dishes.length} retter</span></span>` : ''}
+    </button><button class="more" data-act="item" data-i="${esc(it.name)}" aria-label="Flere valg for ${esc(it.name)}">${ICON.more}</button></div>`;
+  };
   for (const dept of DEPTS){
-    const list = buy.filter(i => (S.dept[i.name]||'Andet')===dept)
-      .sort((a,b)=> (!!p.checked[a.name]-!!p.checked[b.name]) || a.name.localeCompare(b.name,'da'));
+    const list = todo.filter(i => (S.dept[i.name]||'Andet')===dept).sort((a,b)=>a.name.localeCompare(b.name,'da'));
     if (!list.length) continue;
-    h += `<div class="section-title">${dept}</div><div class="card list shop">`;
-    for (const it of list){
-      const on = !!p.checked[it.name];
-      h += `<div class="li ${on?'done':''}">
-        <button class="check ${on?'on':''}" data-act="tick" data-i="${esc(it.name)}" aria-label="Afkryds">${on?ICON.check:''}</button>
-        <div class="grow" data-act="item" data-i="${esc(it.name)}" role="button"><div class="t">${esc(cap(it.name))}</div><div class="s">${esc(it.dishes.join(', '))}</div></div>
-        ${it.dishes.length>1?`<span class="reuse">${it.dishes.length} retter</span>`:''}
-      </div>`;
-    }
-    h += '</div>';
+    h += `<div class="ghead">${dept}<span class="aux num">${list.length}</span></div><div class="group">${list.map(itemRow).join('')}</div>`;
+  }
+  if (done.length){
+    h += `<details class="fold" ${todo.length?'':'open'}><summary><div class="ghead"><span style="display:flex;align-items:center;gap:6px">${ICON.chev}I kurven</span><span class="aux num">${done.length}</span></div></summary>
+      <div class="group">${done.sort((a,b)=>a.name.localeCompare(b.name,'da')).map(itemRow).join('')}</div></details>`;
   }
   if (have.length){
-    h += `<details class="pantry"><summary>Har altid · ${have.length} varer skjult ▾</summary><div class="card list shop">`;
-    for (const it of have.sort((a,b)=>a.name.localeCompare(b.name,'da'))){
-      h += `<div class="li"><div class="grow"><div class="t">${esc(cap(it.name))}</div><div class="s">${esc(it.dishes.join(', '))}</div></div>
-        <button class="btn soft" style="padding:7px 12px;font-size:14px" data-act="unpantry" data-i="${esc(it.name)}">Skal købes</button></div>`;
-    }
-    h += '</div></details>';
+    h += `<details class="fold"><summary><div class="ghead"><span style="display:flex;align-items:center;gap:6px">${ICON.chev}Har altid</span><span class="aux num">${have.length} skjult</span></div></summary>
+      <div class="group">${have.sort((a,b)=>a.name.localeCompare(b.name,'da')).map(it=>`<div class="row"><div class="main"><div class="t">${esc(cap(it.name))}</div><div class="s clip">${esc(it.dishes.join(', '))}</div></div>
+        <button class="dbtn" style="flex:none;min-height:40px;background:var(--tint-soft)" data-act="unpantry" data-i="${esc(it.name)}">Skal købes</button></div>`).join('')}</div>
+      <p class="gfoot">Varer her vises ikke på listen. Flyt en vare tilbage, hvis I er løbet tør.</p></details>`;
   }
   $('#view').innerHTML = h;
 }
 
+/* ---------- Retter ---------- */
 function renderDishes(){
-  setHeader('Retter', `<button class="iconbtn" data-act="newdish" aria-label="Ny ret">${ICON.plus}</button>`);
-  const q = norm(UI.dishFilter);
-  let h = `<input class="search" type="search" placeholder="Søg ret eller ingrediens" value="${esc(UI.dishFilter)}" data-input="dishFilter">`;
+  setTitle('Retter'); setDock('');
+  setActions(gbtn('newdish', ICON.plus, 'Ny ret'));
+  const q = norm(UI.dishFilter||'');
+  let h = `<label class="searchbox">${ICON.search}<input type="search" placeholder="Søg ret eller ingrediens" value="${esc(UI.dishFilter||'')}" data-input="dishFilter" aria-label="Søg"></label>`;
+  let any = false;
   for (const cat of ['fisk','kod','veg','fast']){
     const list = S.dishes.filter(d => d.cat===cat && (!q || norm(d.name).includes(q) || d.ings.some(i=>norm(i).includes(q))))
       .sort((a,b)=>a.name.localeCompare(b.name,'da'));
-    if (!list.length) continue;
-    h += `<div class="section-title">${CATS[cat].l} · ${list.length}</div><div class="card list">`;
+    if (!list.length) continue; any = true;
+    h += `<div class="ghead ${catCls(cat)}"><span style="display:flex;align-items:center;gap:8px"><span class="dot"></span>${CATS[cat].l}</span><span class="aux num">${list.length}</span></div><div class="group">`;
     for (const d of list){
       const fixedDays = S.rules.fixed.map((x,i)=>x===d.id?DAYS[i].toLowerCase():null).filter(Boolean);
-      h += `<button class="li" data-act="editdish" data-id="${d.id}"><div class="grow"><div class="t">${esc(d.name)}</div>
-        <div class="s">${fixedDays.length?'Fast '+fixedDays.join(', ')+' · ':''}${d.ings.length} ingredienser${d.url?' · opskrift':''}</div></div><span class="chev">${ICON.chev}</span></button>`;
+      const hit = q && !norm(d.name).includes(q) ? d.ings.filter(i=>norm(i).includes(q)).slice(0,2) : [];
+      h += `<button class="row" data-act="editdish" data-id="${d.id}"><span class="main"><span class="t" style="display:block">${esc(d.name)}</span>
+        <span class="s clip" style="display:block">${hit.length?'Indeholder '+esc(hit.join(', ')):(fixedDays.length?'Fast '+fixedDays.join(', ')+' · ':'')+d.ings.length+' ingredienser'+(d.url?' · opskrift':'')}</span></span><span class="trail">${ICON.chev}</span></button>`;
     }
     h += '</div>';
   }
+  if (!any){
+    h += `<div class="group empty" style="margin-top:14px"><h2>Ingen retter matcher</h2><p>Der er ingen ret eller ingrediens med “${esc(UI.dishFilter)}”.</p>
+      <button class="dbtn primary" style="margin-top:16px;width:100%" data-act="newdish" data-name="${esc(UI.dishFilter)}">${ICON.plus}Opret “${esc(UI.dishFilter)}”</button></div>`;
+  }
   $('#view').innerHTML = h;
-  const s = $('.search'); if (UI.focusSearch){ s.focus(); s.setSelectionRange(s.value.length,s.value.length); UI.focusSearch=false; }
+  if (UI.focusSearch){ const s = document.querySelector('[data-input="dishFilter"]'); s.focus(); s.setSelectionRange(s.value.length,s.value.length); UI.focusSearch=false; }
 }
 
+/* ---------- Indstillinger ---------- */
+function stepper(k, val, min, max){
+  return `<div class="stepper"><button data-act="step" data-k="${k}" data-n="-1" aria-label="Færre" ${val<=min?'disabled':''}>${ICON.minus}</button><span aria-live="polite">${val}</span><button data-act="step" data-k="${k}" data-n="1" aria-label="Flere" ${val>=max?'disabled':''}>${ICON.plus}</button></div>`;
+}
 function renderSettings(){
-  setHeader('Indstillinger');
+  setTitle('Indstillinger'); setActions(''); setDock('');
   const r = S.rules; const fixedDishes = S.dishes.filter(d=>d.cat==='fast');
-  let h = `<div class="section-title">Ugen (lørdag til fredag)</div><div class="card">`;
+  let h = `<div class="ghead" style="margin-top:14px">Ugen<span class="aux">lørdag til fredag</span></div><div class="group">`;
   for (let d=0; d<7; d++){
-    h += `<div class="setrow"><span>${DAYS[d]}</span><select data-change="fixed" data-d="${d}">
+    h += `<div class="row"><div class="main t" style="font-weight:500">${DAYS[d]}</div><select class="menu" data-change="fixed" data-d="${d}" aria-label="${DAYS[d]}">
       <option value="">Fri dag</option>${fixedDishes.map(f=>`<option value="${f.id}" ${r.fixed[d]===f.id?'selected':''}>${esc(f.name)}</option>`).join('')}</select></div>`;
   }
-  h += `</div><p class="hint">Faste retter oprettes under Retter med kategorien "Fast ret".</p>`;
-  h += `<div class="section-title">Regler for frie dage</div><div class="card">
-    <div class="setrow"><span>Fiskedage</span><div class="stepper"><button data-act="step" data-k="fish" data-n="-1">−</button><span>${r.fish}</span><button data-act="step" data-k="fish" data-n="1">+</button></div></div>
-    <div class="setrow"><span>Maks. kød-dage</span><div class="stepper"><button data-act="step" data-k="maxMeat" data-n="-1">−</button><span>${r.maxMeat}</span><button data-act="step" data-k="maxMeat" data-n="1">+</button></div></div>
-    <div class="setrow"><span>Aldrig kød to dage i træk</span><button class="switch ${r.noMeatInRow?'on':''}" data-act="toggleRow" aria-label="Aldrig kød to dage i træk"></button></div>
-    <div class="setrow"><span>Undgå retter fra seneste uger</span><div class="stepper"><button data-act="step" data-k="avoidWeeks" data-n="-1">−</button><span>${r.avoidWeeks}</span><button data-act="step" data-k="avoidWeeks" data-n="1">+</button></div></div>
+  h += `</div><p class="gfoot">Faste retter oprettes under Retter med kategorien Fast ret.</p>`;
+  h += `<div class="ghead">Regler for frie dage</div><div class="group">
+    <div class="row"><div class="main t" style="font-weight:500">Fiskedage</div>${stepper('fish', r.fish, 0, 7)}</div>
+    <div class="row"><div class="main t" style="font-weight:500">Højst kød-dage</div>${stepper('maxMeat', r.maxMeat, 0, 7)}</div>
+    <div class="row"><div class="main t" style="font-weight:500">Aldrig kød to dage i træk</div><button class="switch" role="switch" aria-checked="${r.noMeatInRow}" data-act="toggleRow" aria-label="Aldrig kød to dage i træk"></button></div>
+    <div class="row"><div class="main"><div class="t" style="font-weight:500">Undgå gentagelser</div><div class="s">Uger før en ret må komme igen</div></div>${stepper('avoidWeeks', r.avoidWeeks, 0, 4)}</div>
   </div>`;
-  h += `<div class="section-title">Har altid · ${S.pantry.length}</div>
-    <div class="tags" id="pantryTags">${S.pantry.slice().sort((a,b)=>a.localeCompare(b,'da')).map(p=>`<span class="tag pantry">${esc(p)}<button data-act="rmPantry" data-i="${esc(p)}" aria-label="Fjern">×</button></span>`).join('')}
-    <input placeholder="Tilføj vare…" data-enter="addPantry" enterkeyhint="done"></div>
-    <p class="hint">Kommer ikke på indkøbslisten og tæller ikke som genbrug.</p>`;
-  h += `<div class="section-title">Backup</div><div class="card">
-    <button class="li" data-act="export"><div class="grow"><div class="t">Eksportér backup</div><div class="s">Gem retter, regler og planer som fil</div></div><span class="chev">${ICON.chev}</span></button>
-    <label class="li" style="cursor:pointer"><div class="grow"><div class="t">Importér backup</div><div class="s">Erstatter alle data på telefonen</div></div><span class="chev">${ICON.chev}</span><input type="file" accept="application/json,.json" data-change="import" hidden></label>
+  h += `<div class="ghead">Har altid<span class="aux num">${S.pantry.length} varer</span></div>
+    <div class="group tags">${S.pantry.slice().sort((a,b)=>a.localeCompare(b,'da')).map(p=>`<span class="tag muted">${esc(p)}<button data-act="rmPantry" data-i="${esc(p)}" aria-label="Fjern ${esc(p)}">${ICON.close}</button></span>`).join('')}
+    <input placeholder="Tilføj vare" data-enter="addPantry" enterkeyhint="done" aria-label="Tilføj vare til Har altid"></div>
+    <p class="gfoot">Kommer ikke på indkøbslisten og tæller ikke som genbrug mellem retter.</p>`;
+  h += `<div class="ghead">Backup</div><div class="group">
+    <button class="row" data-act="export"><span class="main"><span class="t" style="display:block;font-weight:500">Eksportér backup</span><span class="s" style="display:block">Retter, regler og planer som fil</span></span><span class="trail">${ICON.share}</span></button>
+    <label class="row press" style="cursor:pointer"><span class="main"><span class="t" style="display:block;font-weight:500">Importér backup</span><span class="s" style="display:block">Erstatter alle data på telefonen</span></span><span class="trail">${ICON.chev}</span><input type="file" accept="application/json,.json" data-change="import" hidden></label>
   </div>
-  <div class="btnrow"><button class="btn danger block" data-act="reset">Nulstil til startdata</button></div>
-  <p class="hint" style="text-align:center;margin-top:16px">Madplan · data gemmes kun på denne enhed</p>`;
+  <div class="group" style="margin-top:26px"><button class="row destructive" data-act="reset"><span class="main t">Nulstil til startdata</span></button></div>
+  <p class="gfoot" style="text-align:center;margin-top:18px">Data gemmes kun på denne iPhone.</p>`;
   $('#view').innerHTML = h;
 }
 
 /* ---------- Sheets ---------- */
 let sheetEl = null;
-function openSheet(html){
-  closeSheet(true);
-  sheetEl = document.createElement('div'); sheetEl.className='backdrop';
-  sheetEl.innerHTML = `<div class="sheet" role="dialog"><div class="grab"></div>${html}</div>`;
-  sheetEl.addEventListener('click', e => { if (e.target===sheetEl) closeSheet(); });
-  document.body.appendChild(sheetEl); document.body.style.overflow='hidden';
+function hideToast(){ clearTimeout(toastT); $('#toast').classList.remove('show'); toastAct = null; }
+function openSheet(title, body, right){
+  closeSheet(true); hideToast();
+  sheetEl = document.createElement('div'); sheetEl.className = 'backdrop';
+  sheetEl.innerHTML = `<div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="grabber"></div>
+    <div class="sheetbar"><button class="gbtn glass" data-close aria-label="Luk">${ICON.close}</button><h2>${esc(title)}</h2>${right || '<span class="spacer"></span>'}</div>${body}</div>`;
+  sheetEl.addEventListener('click', e => { if (e.target===sheetEl || e.target.closest('[data-close]')) closeSheet(); });
+  document.body.appendChild(sheetEl); document.body.style.overflow = 'hidden';
   requestAnimationFrame(()=>requestAnimationFrame(()=>sheetEl && sheetEl.classList.add('show')));
   return sheetEl.querySelector('.sheet');
 }
 function closeSheet(now){
-  if (!sheetEl) return; const el = sheetEl; sheetEl = null; document.body.style.overflow='';
-  if (now) { el.remove(); return; }
-  el.classList.remove('show'); setTimeout(()=>el.remove(), 250);
+  if (!sheetEl) return; const el = sheetEl; sheetEl = null; document.body.style.overflow = '';
+  if (now){ el.remove(); return; }
+  el.classList.remove('show'); setTimeout(()=>el.remove(), 260);
 }
 
-function openPicker(d){
-  const p = getPlan(UI.week, true);
-  const sh = openSheet(`<div class="sheethead"><h2>${DAYS[d]}</h2>${p.days[d]?`<button class="btn soft" style="padding:8px 12px;font-size:14px" data-act="cleardayx" data-d="${d}">Ryd dag</button>`:''}</div>
-    <p class="hint" style="margin-bottom:8px">Sorteret efter hvor godt retten passer til regler og genbrug.</p>
-    <input class="search" type="search" placeholder="Søg ret" data-pick-search>
-    <div class="card list" id="pickList"></div>`);
+function openDay(d){
+  const p = getPlan(UI.week, true); const dish = dishById(p.days[d]); const pantry = pantrySet();
+  let body = '';
+  if (dish){
+    const ings = ingsFor(dish.id, pantry);
+    body += `<div class="lead ${catCls(dish.cat)}"><h3>${esc(dish.name)}</h3><p>${catLabel(dish.cat)} · ${esc(ings.join(', '))}</p>
+      ${dish.url?`<a class="openlink" href="${esc(dish.url)}" target="_blank" rel="noopener">${ICON.out}Åbn opskrift</a>`:''}</div>`;
+  }
+  if (p.approved){
+    body += `<p class="gfoot" style="margin-top:18px">Planen er godkendt. Tryk “Ret plan” for at skifte ret.</p>`;
+    openSheet(DAYS[d], body); return;
+  }
+  body += `<div class="ghead">${dish?'Vælg en anden ret':'Vælg ret'}<span class="aux">bedst egnede først</span></div>
+    <label class="searchbox" style="margin:0 0 10px">${ICON.search}<input type="search" placeholder="Søg ret" data-pick-search aria-label="Søg ret"></label>
+    <div class="group" id="pickList"></div>
+    ${dish?`<div class="group" style="margin-top:16px"><button class="row destructive" data-act="clearday" data-d="${d}"><span class="main t">Ryd ${DAYS[d].toLowerCase()}</span></button></div>`:''}`;
+  const sh = openSheet(DAYS[d], body);
   const draw = q => {
     q = norm(q||'');
-    const rank = rankFor(UI.week, d).filter(c => !q || norm(c.dish.name).includes(q));
-    sh.querySelector('#pickList').innerHTML = rank.map(c => `<button class="li" data-act="choose" data-d="${d}" data-id="${c.id}">
-      <div class="grow"><div class="t">${esc(c.dish.name)} ${c.id===p.days[d]?'<span class="muted small">· valgt</span>':''}</div>
-      ${c.problems.length && isFree(d) ? `<div class="warnline">${esc(c.problems.join(' · '))}</div>` : (c.shared.length?`<div class="okline">Deler ${esc(c.shared.slice(0,5).join(', '))}${c.shared.length>5?' …':''}</div>`:'')}
-      </div>${chip(c.dish.cat)}</button>`).join('');
+    const rank = rankFor(UI.week, d).filter(c => c.id!==p.days[d] && (!q || norm(c.dish.name).includes(q)));
+    sh.querySelector('#pickList').innerHTML = rank.map(c => `<button class="row ${catCls(c.dish.cat)}" data-act="choose" data-d="${d}" data-id="${c.id}" style="--inset:40px">
+      <span class="dot"></span><span class="main"><span class="t" style="display:block">${esc(c.dish.name)}</span>
+      ${c.problems.length && isFree(d) ? `<span class="warn">${ICON.alert}${esc(cap(c.problems.join(' · ')))}</span>` : (c.shared.length?`<span class="good" style="display:block">Deler ${esc(c.shared.slice(0,4).join(', '))}${c.shared.length>4?' +'+(c.shared.length-4):''}</span>`:'')}
+      </span></button>`).join('') || `<div class="row"><span class="main s">Ingen retter matcher</span></div>`;
   };
   draw('');
   sh.querySelector('[data-pick-search]').addEventListener('input', e => draw(e.target.value));
 }
 
-function openDishEditor(id){
+function openDishEditor(id, presetName){
   const existing = id ? dishById(id) : null;
-  const dish = existing ? JSON.parse(JSON.stringify(existing)) : { id:'', name:'', cat:'veg', ings:[], url:'' };
-  const sh = openSheet(`<div class="sheethead"><h2>${existing?'Redigér ret':'Ny ret'}</h2></div>
-    <label class="f">Navn</label><input class="in" id="dName" value="${esc(dish.name)}" placeholder="Fx Fiskefrikadeller" autocomplete="off">
-    <label class="f">Kategori</label><div class="seg" id="dCat">${Object.entries(CATS).map(([k,v])=>`<button type="button" data-cat="${k}">${v.l}</button>`).join('')}</div>
-    <label class="f">Ingredienser</label><div class="tags" id="dTags"></div>
-    <div class="suggest" id="dSug"></div>
-    <p class="hint">Skriv og tryk retur. Grå = "har altid" og kommer ikke på listen.</p>
-    <label class="f">Link til opskrift (valgfri)</label><input class="in" id="dUrl" type="url" inputmode="url" value="${esc(dish.url)}" placeholder="https://">
-    <div class="btnrow">${existing?'<button class="btn danger" id="dDel">Slet</button>':''}<button class="btn primary" id="dSave">Gem</button></div>`);
-  const known = () => [...new Set([...S.dishes.flatMap(x=>x.ings.map(norm)), ...Object.keys(S.dept), ...S.pantry])].sort((a,b)=>a.localeCompare(b,'da'));
-  const drawCat = () => sh.querySelectorAll('#dCat button').forEach(b=>b.classList.toggle('on', b.dataset.cat===dish.cat));
+  const dish = existing ? JSON.parse(JSON.stringify(existing)) : { id:'', name:presetName||'', cat:'veg', ings:[], url:'' };
   const pantry = pantrySet();
+  const sh = openSheet(existing ? 'Redigér ret' : 'Ny ret',
+    `<div class="group" style="margin-top:6px"><input class="field" id="dName" value="${esc(dish.name)}" placeholder="Navn på retten" autocomplete="off" aria-label="Navn"></div>
+    <div class="ghead">Kategori</div><div class="seg" id="dCat" role="group" aria-label="Kategori">${Object.entries(CATS).map(([k,v])=>`<button type="button" data-cat="${k}">${v.l}</button>`).join('')}</div>
+    <div class="ghead">Ingredienser<span class="aux num" id="dCount"></span></div>
+    <div class="group"><div class="tags" id="dTags"></div><div class="suggest" id="dSug"></div></div>
+    <p class="gfoot">Skriv og tryk retur. Grå varer har I altid og kommer ikke på listen.</p>
+    <div class="ghead">Opskrift</div><div class="group"><input class="field" id="dUrl" type="url" inputmode="url" value="${esc(dish.url)}" placeholder="Link til opskrift (valgfrit)" aria-label="Link til opskrift"></div>
+    ${existing?`<div class="group" style="margin-top:26px"><button class="row destructive" id="dDel"><span class="main t">Slet ret</span></button></div>`:''}`,
+    `<button class="gbtn glass tinted" id="dSave" aria-label="Gem">${ICON.check}</button>`);
+  const known = () => [...new Set([...S.dishes.flatMap(x=>x.ings.map(norm)), ...Object.keys(S.dept), ...S.pantry])].sort((a,b)=>a.localeCompare(b,'da'));
+  const drawCat = () => sh.querySelectorAll('#dCat button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.cat===dish.cat));
   const drawTags = () => {
     const box = sh.querySelector('#dTags');
-    box.innerHTML = dish.ings.map((g,i)=>`<span class="tag ${pantry.has(norm(g))?'pantry':''}">${esc(g)}<button type="button" data-rm="${i}" aria-label="Fjern">×</button></span>`).join('')
-      + `<input id="dIng" placeholder="Tilføj ingrediens…" autocomplete="off" autocapitalize="none" enterkeyhint="enter">`;
+    box.innerHTML = dish.ings.map((g,i)=>`<span class="tag ${pantry.has(norm(g))?'muted':''}">${esc(g)}<button type="button" data-rm="${i}" aria-label="Fjern ${esc(g)}">${ICON.close}</button></span>`).join('')
+      + `<input id="dIng" placeholder="${dish.ings.length?'Tilføj':'Fx grønkål'}" autocomplete="off" autocapitalize="none" enterkeyhint="enter" aria-label="Tilføj ingrediens">`;
+    sh.querySelector('#dCount').textContent = dish.ings.length || '';
     const inp = box.querySelector('#dIng');
     inp.addEventListener('keydown', e => { if (e.key==='Enter' || e.key===','){ e.preventDefault(); add(inp.value); } });
     inp.addEventListener('input', () => sug(inp.value));
-    inp.addEventListener('blur', () => { if (inp.value.trim()) setTimeout(()=>{ if (sh.isConnected && inp.value.trim()) add(inp.value, true); },150); });
     box.querySelectorAll('[data-rm]').forEach(b=>b.addEventListener('click', ()=>{ dish.ings.splice(+b.dataset.rm,1); drawTags(); }));
   };
   const sug = q => {
@@ -633,7 +832,7 @@ function openDishEditor(id){
     const have = new Set(dish.ings.map(norm));
     const list = known().filter(k => k.includes(q) && !have.has(k)).sort((a,b)=>(b.startsWith(q))-(a.startsWith(q))).slice(0,8);
     el.innerHTML = list.map(k=>`<button type="button" data-s="${esc(k)}">${esc(k)}</button>`).join('');
-    el.querySelectorAll('[data-s]').forEach(b=>b.addEventListener('mousedown', e=>{ e.preventDefault(); add(b.dataset.s); }));
+    el.querySelectorAll('[data-s]').forEach(b=>b.addEventListener('pointerdown', e=>{ e.preventDefault(); add(b.dataset.s); }));
   };
   const add = (v, noFocus) => {
     for (const part of String(v).split(',')){ const n = norm(part); if (n && !dish.ings.map(norm).includes(n)) dish.ings.push(n); }
@@ -642,41 +841,36 @@ function openDishEditor(id){
   };
   drawCat(); drawTags();
   sh.querySelector('#dCat').addEventListener('click', e => { const b=e.target.closest('[data-cat]'); if(b){ dish.cat=b.dataset.cat; drawCat(); } });
-  sh.querySelector('#dSave').addEventListener('click', () => {
+  sh.closest('.backdrop').querySelector('#dSave').addEventListener('click', () => {
     const pending = sh.querySelector('#dIng').value; if (pending.trim()) add(pending, true);
     dish.name = sh.querySelector('#dName').value.trim(); dish.url = sh.querySelector('#dUrl').value.trim();
-    if (!dish.name){ toast('Retten mangler et navn'); return; }
+    if (!dish.name){ toast('Retten mangler et navn'); sh.querySelector('#dName').focus(); return; }
     if (S.dishes.some(x => norm(x.name)===norm(dish.name) && x.id!==dish.id)){ toast('Der findes allerede en ret med det navn'); return; }
     if (existing){ Object.assign(existing, dish); if (dish.cat!=='fast') S.rules.fixed = S.rules.fixed.map(x=>x===dish.id?null:x); }
     else { dish.id = uid(); S.dishes.push(dish); }
-    save(); closeSheet(); render(); toast('Gemt');
+    save(); closeSheet(); render(); toast(existing ? 'Ændringer gemt' : dish.name + ' er tilføjet');
   });
   const del = sh.querySelector('#dDel');
   if (del) del.addEventListener('click', () => {
-    if (!confirmTwice(del)) return;
+    if (!confirmTwice(del, 'Tryk igen for at slette')) return;
+    const backup = JSON.parse(JSON.stringify(S));
     S.dishes = S.dishes.filter(x=>x.id!==dish.id);
     S.rules.fixed = S.rules.fixed.map(x=>x===dish.id?null:x);
     for (const p of Object.values(S.plans)) p.days = p.days.map(x=>x===dish.id?null:x);
-    save(); closeSheet(); render(); toast('Slettet');
+    save(); closeSheet(); render(); toast(dish.name + ' er slettet', 'Fortryd', () => { S = backup; save(); render(); });
   });
-  if (!existing) setTimeout(()=>sh.querySelector('#dName').focus(), 260);
-}
-/* Første tryk spørger, andet tryk udfører. Undgår browserens confirm-dialog. */
-function confirmTwice(btn){
-  if (btn.dataset.armed) return true;
-  btn.dataset.armed = '1'; const old = btn.textContent; btn.textContent = 'Tryk igen';
-  setTimeout(()=>{ if (btn.isConnected){ delete btn.dataset.armed; btn.textContent = old; } }, 2500);
-  return false;
+  if (!existing && !presetName) setTimeout(()=>sh.querySelector('#dName').focus(), 300);
 }
 
 function openItem(name){
   const cur = S.dept[name] || 'Andet';
-  const sh = openSheet(`<h2>${esc(cap(name))}</h2><label class="f">Afdeling</label>
-    <div class="card list">${DEPTS.map(d=>`<button class="li" data-dept="${d}"><div class="grow t">${d}</div>${d===cur?`<span style="color:var(--accent)">${ICON.check.replace('<svg','<svg width="18" height="18"')}</span>`:''}</button>`).join('')}</div>
-    <div class="btnrow"><button class="btn soft block" id="toPantry">Flyt til "Har altid"</button></div>
-    <p class="hint">"Har altid"-varer vises ikke på indkøbslisten.</p>`);
-  sh.querySelectorAll('[data-dept]').forEach(b=>b.addEventListener('click', ()=>{ S.dept[name]=b.dataset.dept; save(); closeSheet(); render(); }));
-  sh.querySelector('#toPantry').addEventListener('click', ()=>{ if(!S.pantry.includes(name)) S.pantry.push(name); save(); closeSheet(); render(); toast(cap(name)+' er flyttet til "Har altid"'); });
+  const sh = openSheet(cap(name), `<div class="ghead" style="margin-top:6px">Afdeling</div>
+    <div class="group">${DEPTS.map(d=>`<button class="row" data-dept="${d}"><span class="main t" style="font-weight:500">${d}</span>${d===cur?`<span class="trail" style="color:var(--tint)">${ICON.check}</span>`:''}</button>`).join('')}</div>
+    <div class="group" style="margin-top:16px"><button class="row" id="toPantry"><span class="main t" style="color:var(--tint);font-weight:500">Flyt til Har altid</span></button></div>
+    <p class="gfoot">Varer I altid har, vises ikke på indkøbslisten.</p>`);
+  sh.querySelectorAll('[data-dept]').forEach(b=>b.addEventListener('click', ()=>{ S.dept[name]=b.dataset.dept; save(); closeSheet(); render(); toast(cap(name)+' ligger nu i '+b.dataset.dept); }));
+  sh.querySelector('#toPantry').addEventListener('click', ()=>{ if(!S.pantry.includes(name)) S.pantry.push(name); save(); closeSheet(); render();
+    toast(cap(name)+' er skjult', 'Fortryd', ()=>{ S.pantry = S.pantry.filter(x=>x!==name); save(); render(); }); });
 }
 
 /* ---------- Del, eksport, import ---------- */
@@ -690,8 +884,8 @@ async function shareList(){
   txt += '\nMadplan\n' + p.days.map((id,d)=>`${DAYS_SHORT[d]}: ${(dishById(id)||{name:'-'}).name}`).join('\n');
   try {
     if (navigator.share) await navigator.share({ title:'Indkøbsliste', text:txt });
-    else { await navigator.clipboard.writeText(txt); toast('Kopieret'); }
-  } catch(e){ if (e && e.name!=='AbortError'){ try { await navigator.clipboard.writeText(txt); toast('Kopieret'); } catch(_){} } }
+    else { await navigator.clipboard.writeText(txt); toast('Listen er kopieret'); }
+  } catch(e){ if (e && e.name!=='AbortError'){ try { await navigator.clipboard.writeText(txt); toast('Listen er kopieret'); } catch(_){ toast('Kunne ikke dele listen'); } } }
 }
 async function exportData(){
   const json = JSON.stringify(S, null, 1);
@@ -709,62 +903,74 @@ function importData(file){
     try {
       const data = JSON.parse(fr.result);
       if (!data || !Array.isArray(data.dishes) || !data.rules) throw new Error('format');
-      S = data; save(); render(); toast('Backup indlæst');
-    } catch(e){ toast('Filen er ikke en gyldig backup'); }
+      const backup = S; S = data; save(); render(); toast('Backup er indlæst', 'Fortryd', ()=>{ S = backup; save(); render(); });
+    } catch(e){ toast('Filen er ikke en backup fra Madplan'); }
   };
+  fr.onerror = () => toast('Filen kunne ikke læses');
   fr.readAsText(file);
 }
 
 /* ---------- Events ---------- */
 document.addEventListener('click', e => {
+  if (e.target.closest('a[href]')) return;
   const t = e.target.closest('[data-act],[data-tab]');
-  if (!t) return;
-  if (e.target.closest('[data-stop]')) return; // opskrift-link
+  if (!t || t.closest('.backdrop') && !t.dataset.act) return;
   const act = t.dataset.act || 'tab'; const d = +t.dataset.d;
   switch(act){
-    case 'tab': UI.tab = t.dataset.tab; closeSheet(true); window.scrollTo(0,0); render(); break;
-    case 'week': UI.week = ymd(addDays(parseYmd(UI.week), +t.dataset.n)); render(); break;
+    case 'tab': UI.tab = t.dataset.tab; closeSheet(true); hideToast(); window.scrollTo(0,0); render(); break;
+    case 'week': UI.week = ymd(addDays(parseYmd(UI.week), +t.dataset.n)); UI.hl = null; render(); break;
     case 'generate': generate(UI.week); render(); break;
-    case 'regen': if (!confirmTwice(t)) return; generate(UI.week); render(); break;
+    case 'regen': { const p = getPlan(UI.week); const prev = p.days.slice();
+      if (generate(UI.week)){ render(); toast('Ny madplan', 'Fortryd', ()=>{ p.days = prev; save(); render(); }); } break; }
     case 'swap': e.stopPropagation(); swapDay(UI.week, d); break;
-    case 'pick': if (getPlan(UI.week)?.approved){ toast('Tryk "Ret plan" for at ændre'); return; } openPicker(d); break;
+    case 'day': openDay(d); break;
+    case 'hl': UI.hl = UI.hl===t.dataset.i ? null : t.dataset.i; renderPlan(); break;
     case 'choose': { const p = getPlan(UI.week,true); const id = t.dataset.id;
       const other = p.days.findIndex((x,i)=>x===id && i!==d); if (other>=0) p.days[other] = null;
       p.days[d] = id; save(); closeSheet(); render(); break; }
-    case 'cleardayx': { const p = getPlan(UI.week); p.days[d] = null; save(); closeSheet(); render(); break; }
+    case 'clearday': { const p = getPlan(UI.week); p.days[d] = null; save(); closeSheet(); render(); break; }
     case 'approve': { const p = getPlan(UI.week); const empty = p.days.filter(x=>!x).length;
-      if (empty && !confirmTwice(t)) { toast(empty+' dag(e) uden ret - tryk igen for at godkende'); return; }
-      p.approved = true; save(); UI.tab='shop'; window.scrollTo(0,0); render(); toast('Godkendt - indkøbslisten er klar'); break; }
+      if (empty && !confirmTwice(t, `${empty} dag${empty>1?'e':''} uden ret - godkend?`)) return;
+      p.approved = true; save(); UI.tab = 'shop'; window.scrollTo(0,0); render(); toast('Indkøbslisten er klar'); break; }
     case 'unapprove': getPlan(UI.week).approved = false; save(); render(); break;
-    case 'tick': { const p = getPlan(UI.week); const k = t.dataset.i; p.checked[k] = !p.checked[k]; if(!p.checked[k]) delete p.checked[k]; save(); render(); break; }
+    case 'tick': { const p = getPlan(UI.week); const k = t.dataset.i; const on = !p.checked[k];
+      if (on) p.checked[k] = true; else delete p.checked[k]; save();
+      t.classList.toggle('done', on); t.setAttribute('aria-pressed', on);
+      { const buy = shoppingItems(p).filter(i=>!i.pantry); const left = buy.filter(i=>!p.checked[i.name]).length; const pct = buy.length ? Math.round((buy.length-left)/buy.length*100) : 0;
+        const big = document.querySelector('.progress .big'); if (big) big.innerHTML = left ? `${left} <span>af ${buy.length} varer mangler</span>` : 'Alt er i kurven';
+        const bar = document.querySelector('.bar'); if (bar){ bar.firstElementChild.style.width = pct+'%'; bar.setAttribute('aria-valuenow', pct); } }
+      clearTimeout(UI.tickT); UI.tickT = setTimeout(()=>{ if (UI.tab==='shop' && !sheetEl) renderShop(); }, 1400); break; }
     case 'item': openItem(t.dataset.i); break;
     case 'unpantry': S.pantry = S.pantry.filter(x=>x!==t.dataset.i); save(); render(); toast(cap(t.dataset.i)+' er på listen'); break;
     case 'share': shareList(); break;
-    case 'newdish': openDishEditor(null); break;
+    case 'newdish': openDishEditor(null, t.dataset.name); break;
     case 'editdish': openDishEditor(t.dataset.id); break;
-    case 'step': { const k=t.dataset.k; const max = k==='avoidWeeks'?4:7; S.rules[k] = Math.max(0, Math.min(max, S.rules[k] + +t.dataset.n)); save(); render(); break; }
+    case 'step': { const k = t.dataset.k; const max = k==='avoidWeeks'?4:7; S.rules[k] = Math.max(0, Math.min(max, S.rules[k] + +t.dataset.n)); save(); render(); break; }
     case 'toggleRow': S.rules.noMeatInRow = !S.rules.noMeatInRow; save(); render(); break;
     case 'rmPantry': S.pantry = S.pantry.filter(x=>x!==t.dataset.i); save(); render(); break;
     case 'export': exportData(); break;
-    case 'reset': if (!confirmTwice(t)) return; S = seedState(); save(); render(); toast('Nulstillet'); break;
+    case 'reset': { if (!confirmTwice(t, 'Tryk igen for at nulstille alt')) return; const backup = S; S = seedState(); save(); render();
+      toast('Alt er nulstillet', 'Fortryd', ()=>{ S = backup; save(); render(); }); break; }
   }
 });
-document.addEventListener('input', e => {
-  const k = e.target.dataset.input;
-  if (k==='dishFilter'){ UI.dishFilter = e.target.value; UI.focusSearch = true; renderDishes(); }
-});
-document.addEventListener('change', e => {
-  const k = e.target.dataset.change;
-  if (k==='fixed'){ S.rules.fixed[+e.target.dataset.d] = e.target.value || null; save(); toast('Gælder nye madplaner'); }
-  if (k==='import' && e.target.files[0]) importData(e.target.files[0]);
-});
 document.addEventListener('keydown', e => {
+  if ((e.key==='Enter' || e.key===' ') && e.target.matches('[role="button"][data-act]')){ e.preventDefault(); e.target.click(); }
+  if (e.key==='Escape' && sheetEl) closeSheet();
   if (e.key==='Enter' && e.target.dataset.enter==='addPantry'){
     const v = norm(e.target.value); if (v && !S.pantry.includes(v)){ S.pantry.push(v); save(); }
     renderSettings(); const inp = document.querySelector('[data-enter="addPantry"]'); inp && inp.focus();
   }
 });
+document.addEventListener('input', e => {
+  if (e.target.dataset.input==='dishFilter'){ UI.dishFilter = e.target.value; UI.focusSearch = true; renderDishes(); }
+});
+document.addEventListener('change', e => {
+  const k = e.target.dataset.change;
+  if (k==='fixed'){ S.rules.fixed[+e.target.dataset.d] = e.target.value || null; save(); toast('Gælder fra næste nye madplan'); }
+  if (k==='import' && e.target.files[0]) importData(e.target.files[0]);
+});
 
+UI.hl = null;
 render();
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
   window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
